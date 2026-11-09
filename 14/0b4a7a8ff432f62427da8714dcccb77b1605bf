@@ -1,0 +1,165 @@
+ATTRIBUTION.txt
+  s_fcbfb2e2b45915::t_d5f7344d09c943 1-4
+index.html
+  s_fcbfb2e2b45915::t_fac2fae4783c3c 1-2082
+reader.css
+  s_fcbfb2e2b45915::t_9241a90d8bb677 1
+site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css
+  s_fcbfb2e2b45915::t_9067f0dc6577d1 1-12
+site_libs/bootstrap/bootstrap-icons.css
+  s_fcbfb2e2b45915::t_98284351e7bd84 1-2106
+site_libs/bootstrap/bootstrap.min.js
+  s_fcbfb2e2b45915::t_b55309dc6aa3ca 1-7
+site_libs/clipboard/clipboard.min.js
+  s_fcbfb2e2b45915::t_51d1549da69f9d 1-7
+site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.css
+  s_fcbfb2e2b45915::t_be65a7a5592b4a 1-98
+site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.js
+  s_fcbfb2e2b45915::t_aaeed35d7bd5fc 1-425
+site_libs/quarto-html/anchor.min.js
+  s_fcbfb2e2b45915::t_dfbdbf4d6dcd57 1-9
+site_libs/quarto-html/popper.min.js
+  s_fcbfb2e2b45915::t_d531c5d9d60ef2 1-6
+site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css
+  s_fcbfb2e2b45915::t_f7deb8d0c99ecc 1-236
+site_libs/quarto-html/quarto.js
+  s_fcbfb2e2b45915::t_920fed6388f025 1-845
+site_libs/quarto-html/tabsets/tabsets.js
+  s_fcbfb2e2b45915::t_33d6d82370f9f8 1-95
+site_libs/quarto-html/tippy.css
+  s_fcbfb2e2b45915::t_55722090135d4f 1
+site_libs/quarto-html/tippy.umd.min.js
+  s_fcbfb2e2b45915::t_b6f5b088142a59 1-2
+site_libs/quarto-nav/quarto-nav.js
+  s_fcbfb2e2b45915::t_0e554772cd69c2 1-328
+site_libs/quarto-search/autocomplete.umd.js
+  s_fcbfb2e2b45915::t_abc259b51cd383 1-3
+site_libs/quarto-search/fuse.min.js
+  s_fcbfb2e2b45915::t_27b1c7673d49d7 1-9
+site_libs/quarto-search/quarto-search.js
+  s_fcbfb2e2b45915::t_fbe12d26de9dd3 1-1457
+sources.js
+  s_fcbfb2e2b45915::t_e9aefba8a69b8f 1
+vendor/mathjax/LICENSE.txt
+  s_fcbfb2e2b45915::t_d7fa3c6fadd405 1-202
+vendor/mathjax/a11y/assistive-mml.js
+  s_fcbfb2e2b45915::t_6a90669c5aa7d3 1
+vendor/mathjax/a11y/complexity.js
+  s_fcbfb2e2b45915::t_598b379c5edd12 1
+vendor/mathjax/a11y/explorer.js
+  s_fcbfb2e2b45915::t_b67fc8596d0c1f 1
+vendor/mathjax/a11y/semantic-enrich.js
+  s_fcbfb2e2b45915::t_cbffc61979e300 1
+vendor/mathjax/a11y/sre.js
+  s_fcbfb2e2b45915::t_9b07e1944f5ded 1
+vendor/mathjax/input/asciimath.js
+  s_fcbfb2e2b45915::t_7c9d5853cb65c1 1
+vendor/mathjax/input/mml.js
+  s_fcbfb2e2b45915::t_89c51691262123 1
+vendor/mathjax/input/mml/entities.js
+  s_fcbfb2e2b45915::t_7be1664b6e3619 1
+vendor/mathjax/input/mml/extensions/mml3.js
+  s_fcbfb2e2b45915::t_e2232a618a8aca 1
+vendor/mathjax/input/tex-base.js
+  s_fcbfb2e2b45915::t_14d1ef91b8e8fa 1
+vendor/mathjax/input/tex-full.js
+  s_fcbfb2e2b45915::t_453f3c108ce965 1-34
+vendor/mathjax/input/tex.js
+  s_fcbfb2e2b45915::t_b9314db92db831 1
+vendor/mathjax/input/tex/extensions/action.js
+  s_fcbfb2e2b45915::t_c2a2e56c476fdc 1
+vendor/mathjax/input/tex/extensions/all-packages.js
+  s_fcbfb2e2b45915::t_1f756169f4aec6 1-34
+vendor/mathjax/input/tex/extensions/ams.js
+  s_fcbfb2e2b45915::t_fb1f376d431ff7 1
+vendor/mathjax/input/tex/extensions/amscd.js
+  s_fcbfb2e2b45915::t_4afe7f65e55470 1
+vendor/mathjax/input/tex/extensions/autoload.js
+  s_fcbfb2e2b45915::t_bbe0db1bb5945f 1
+vendor/mathjax/input/tex/extensions/bbox.js
+  s_fcbfb2e2b45915::t_df43b70aba41d9 1
+vendor/mathjax/input/tex/extensions/boldsymbol.js
+  s_fcbfb2e2b45915::t_5fcaae33d1215f 1
+vendor/mathjax/input/tex/extensions/braket.js
+  s_fcbfb2e2b45915::t_bc179199302136 1
+vendor/mathjax/input/tex/extensions/bussproofs.js
+  s_fcbfb2e2b45915::t_2b0c60b3070d01 1
+vendor/mathjax/input/tex/extensions/cancel.js
+  s_fcbfb2e2b45915::t_2cbda8671b939e 1
+vendor/mathjax/input/tex/extensions/cases.js
+  s_fcbfb2e2b45915::t_91499e68ef637b 1
+vendor/mathjax/input/tex/extensions/centernot.js
+  s_fcbfb2e2b45915::t_d9c6cd7f4e67fe 1
+vendor/mathjax/input/tex/extensions/color.js
+  s_fcbfb2e2b45915::t_9f1e74d618602f 1
+vendor/mathjax/input/tex/extensions/colortbl.js
+  s_fcbfb2e2b45915::t_4968d84207db61 1
+vendor/mathjax/input/tex/extensions/colorv2.js
+  s_fcbfb2e2b45915::t_5d1e4d021c4676 1
+vendor/mathjax/input/tex/extensions/configmacros.js
+  s_fcbfb2e2b45915::t_462a0724d6edee 1
+vendor/mathjax/input/tex/extensions/empheq.js
+  s_fcbfb2e2b45915::t_1b478c07ff4a3b 1
+vendor/mathjax/input/tex/extensions/enclose.js
+  s_fcbfb2e2b45915::t_9daf2719d31d67 1
+vendor/mathjax/input/tex/extensions/extpfeil.js
+  s_fcbfb2e2b45915::t_32fec91bd7f954 1
+vendor/mathjax/input/tex/extensions/gensymb.js
+  s_fcbfb2e2b45915::t_98b9bbfbbc5656 1
+vendor/mathjax/input/tex/extensions/html.js
+  s_fcbfb2e2b45915::t_d8e4531af08280 1
+vendor/mathjax/input/tex/extensions/mathtools.js
+  s_fcbfb2e2b45915::t_fc05db762d927a 1
+vendor/mathjax/input/tex/extensions/mhchem.js
+  s_fcbfb2e2b45915::t_fa2a19a2b3bc03 1-34
+vendor/mathjax/input/tex/extensions/newcommand.js
+  s_fcbfb2e2b45915::t_c2c4eed80496f1 1
+vendor/mathjax/input/tex/extensions/noerrors.js
+  s_fcbfb2e2b45915::t_71c57d004c0c62 1
+vendor/mathjax/input/tex/extensions/noundefined.js
+  s_fcbfb2e2b45915::t_b458af1d9f7426 1
+vendor/mathjax/input/tex/extensions/physics.js
+  s_fcbfb2e2b45915::t_c6ae9c5a9eac9a 1
+vendor/mathjax/input/tex/extensions/require.js
+  s_fcbfb2e2b45915::t_1e7155e6c540ca 1
+vendor/mathjax/input/tex/extensions/setoptions.js
+  s_fcbfb2e2b45915::t_5d7e8a46635599 1
+vendor/mathjax/input/tex/extensions/tagformat.js
+  s_fcbfb2e2b45915::t_527ae7a5753502 1
+vendor/mathjax/input/tex/extensions/textcomp.js
+  s_fcbfb2e2b45915::t_fefcc552a8491d 1
+vendor/mathjax/input/tex/extensions/textmacros.js
+  s_fcbfb2e2b45915::t_79268c4bacfec8 1
+vendor/mathjax/input/tex/extensions/unicode.js
+  s_fcbfb2e2b45915::t_2a561f2e7ef7fe 1
+vendor/mathjax/input/tex/extensions/upgreek.js
+  s_fcbfb2e2b45915::t_47229c59821ad3 1
+vendor/mathjax/input/tex/extensions/verb.js
+  s_fcbfb2e2b45915::t_9883b85374bc55 1
+vendor/mathjax/output/chtml/fonts/tex.js
+  s_fcbfb2e2b45915::t_9880a27b0b227c 1
+vendor/mathjax/tex-chtml.js
+  s_fcbfb2e2b45915::t_75d96b939a7e87 1
+vendor/mathjax/ui/lazy.js
+  s_fcbfb2e2b45915::t_cc60a3bf676f33 1
+vendor/mathjax/ui/menu.js
+  s_fcbfb2e2b45915::t_02b5ed10b8355f 1
+vendor/mathjax/ui/safe.js
+  s_fcbfb2e2b45915::t_e05ac66e74913c 1
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "140b4a7a8ff432f62427da8714dcccb77b1605bf",
+  "prompts": {},
+  "sessions": {
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
