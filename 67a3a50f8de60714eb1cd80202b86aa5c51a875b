@@ -1,0 +1,47 @@
+tests/test_library.py
+  s_fcbfb2e2b45915::t_2aba0c7608c228 1-26
+src/fluent_paper/margin-layout/margin-layout.lua
+  s_fcbfb2e2b45915::t_a39f0db8710a3c 1-37
+src/fluent_paper/margin-layout/_extension.yml
+  s_fcbfb2e2b45915::t_9e95323cde3769 1-7
+scripts/import_zotero.py
+  s_fcbfb2e2b45915::t_dd9442fe9adc6b 1-26
+.gitignore
+  s_fcbfb2e2b45915::t_5dd3e949a401e8 1-6
+README.md
+  s_fcbfb2e2b45915::t_5dd3e949a401e8 1-20
+src/fluent_paper/margin-layout/margin-layout.js
+  s_fcbfb2e2b45915::t_8b3a0cdf087a01 1-425
+pyproject.toml
+  s_fcbfb2e2b45915::t_5dd3e949a401e8 1-11
+src/fluent_paper/server.py
+  s_fcbfb2e2b45915::t_5dd3e949a401e8 1-38
+src/fluent_paper/cli.py
+  s_fcbfb2e2b45915::t_740e3b6ee283e5 74-75
+  s_fcbfb2e2b45915::t_cdaa31b5719020 6,79,81,84,87
+  s_fcbfb2e2b45915::t_5dd3e949a401e8 1-5,7-48,50-62,64-73,76-78,80,82-83,85-86,88-126
+  s_fcbfb2e2b45915::t_5ce48e47d62885 63
+  s_fcbfb2e2b45915::t_f59324762ef1d0 49
+src/fluent_paper/margin-layout/margin-layout.css
+  s_fcbfb2e2b45915::t_0c8a6238e8ad64 1-98
+src/fluent_paper/provenance.py
+  s_fcbfb2e2b45915::t_740e3b6ee283e5 1-21
+uv.lock
+  s_fcbfb2e2b45915::t_e488d19c6f44c9 1-2994
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "67a3a50f8de60714eb1cd80202b86aa5c51a875b",
+  "prompts": {},
+  "sessions": {
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
