@@ -1,0 +1,37 @@
+VALIDATION.md
+  s_fcbfb2e2b45915::t_b7e7c8046177d7 21-22
+scripts/import_zotero.py
+  s_fcbfb2e2b45915::t_b7e7c8046177d7 7,21-23
+src/fluent_paper/cli.py
+  s_fcbfb2e2b45915::t_b7e7c8046177d7 119-121
+README.md
+  s_fcbfb2e2b45915::t_b7e7c8046177d7 66
+.github/workflows/pages.yml
+  s_74992010f81739::t_fa3b4accdcd938 1,10,14-22
+scripts/publish_demo.py
+  s_74992010f81739::t_6b0cae84a5d446 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "229b334e6cacc1823f84eb6a2d0b765a9b595e8e",
+  "prompts": {},
+  "sessions": {
+    "s_74992010f81739": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12e-1c06-7ae1-8bc4-f5cd77d02932",
+        "model": "unknown"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    },
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
