@@ -4,6 +4,7 @@ from pathlib import Path
 from urllib.request import urlopen
 from urllib.parse import unquote, urlparse
 from fluent_paper.cli import add, ROOT
+import pypdfium2 as pdf
 base = 'http://127.0.0.1:23119/api/users/0'
 def get(route):
     with urlopen(base + route) as response: return json.load(response)
@@ -17,6 +18,9 @@ for item in get('/items/top?limit=100&itemType=journalArticle'):
             try: raw = json.loads(raw)
             except ValueError: pass
             path = Path(unquote(urlparse(raw).path))
+            document=pdf.PdfDocument(path)
+            pages=len(document);document.close()
+            if pages>80: continue
             key = add(path)
             selected.append({'id':key, 'zotero':item['key'], 'title':item['data']['title']})
             break

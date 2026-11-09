@@ -63,7 +63,7 @@ Private data defaults to `~/Library/Application Support/fluent-paper`, outside G
 
 `demo/` contains only the publisher's CC BY 4.0 sample *Swing-up control of double-inverted pendulum systems* (2024), acquired independently of Zotero. See [THIRD_PARTY.md](THIRD_PARTY.md) for attribution. It is a prebuilt static website; no model or private library is uploaded to GitHub Actions.
 
-The Pages workflow deploys only `demo/`. In repository **Settings → Pages → Build and deployment**, select **GitHub Actions** once. Subsequent changes to `demo/` deploy automatically. The fixed-sample exporter checks the source hash and license metadata before copying selected rendering files.
+The live sample is at **https://fujiy.github.io/fluent-paper/**. GitHub Pages deploys the `gh-pages` branch. The main-branch workflow checks the public package. To publish a rebuilt sample, run `uv run python scripts/export_demo.py`, then `uv run python scripts/publish_demo.py`; the publisher copies only `demo/` into a normal, non-force `gh-pages` commit. The fixed-sample exporter checks the source hash and license metadata before copying selected rendering files.
 
 ## Validation and limits
 

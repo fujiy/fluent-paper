@@ -1,4 +1,4 @@
-name: Publish licensed sample
+name: Validate public sample
 on:
   push:
     branches: [main]
@@ -6,22 +6,17 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
-  pages: write
-  id-token: write
-concurrency:
-  group: pages
-  cancel-in-progress: true
 jobs:
-  deploy:
+  validate:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: demo
-      - uses: actions/deploy-pages@v4
-        id: deployment
+      - name: Check public package
+        run: |
+          test -f demo/index.html
+          test -f demo/ATTRIBUTION.txt
+          test -f demo/source.pdf
+          test -f demo/sources.js
+          test -f demo/vendor/mathjax/tex-chtml.js
+          test -z "$(find demo -type l -print -quit)"
+          if grep -R -l '/Users/yuuki.fj' demo --include='*.html' --include='*.js'; then exit 1; fi

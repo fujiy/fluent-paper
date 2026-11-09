@@ -116,7 +116,9 @@ def main():
     elif args.command == 'rebuild':
         with database() as db:
             rows = db.execute("SELECT id,title FROM papers WHERE status='ready'").fetchall() if args.id=='all' else db.execute('SELECT id,title FROM papers WHERE id=?',(args.id,)).fetchall()
-        for row in rows: build(row['id'],row['title'])
+        for row in rows:
+            title=build(row['id'],row['title'])
+            with database() as db: db.execute('UPDATE papers SET title=? WHERE id=?',(title,row['id']))
     elif args.command == 'list':
         with database() as db:
             print(json.dumps([dict(x) for x in db.execute('SELECT * FROM papers')], indent=2))

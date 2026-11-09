@@ -18,6 +18,8 @@ Environment: Apple M2 Ultra, 192 GB RAM; MinerU 4.1.7; Quarto; Ollama Qwen3 4B. 
 - 13 Python tests: deduplication, invalid input rejection, upload API, cross-origin and host checks, traversal, ZIP extraction boundary, preservation of TeX characters, rejection of model changes to numbers/negation, and executable-cell removal.
 - Six DOM assertions: source links, original page image, bounding-box highlight, close action, enlarged figure and gallery. These use jsdom, not a browser.
 - Public sample's HTML image/script/style references resolve locally; no external rendering dependency remains. MathJax, fonts and source-page images are bundled.
+- All 12 rebuilt readers have unique HTML IDs, existing local images and complete source-button mappings. The six equation fallbacks were confirmed in the rebuilt intermediate data and HTML image paths.
+- GitHub Pages and the Mac Pro sample mirror returned HTTP 200 for HTML, CSS, JavaScript and source-page images. The mirror was checked from the same Mac; separate-device viewing was not tested.
 - Private data is excluded by location and a fixed publisher-sample export allowlist, not just `.gitignore`.
 
 ## Limits
