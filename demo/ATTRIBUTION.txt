@@ -1,0 +1,4 @@
+Al Juboori, A. M., Hussein, M. T., and Qanber, A. S. G. (2024). Swing-up control of double-inverted pendulum systems. Mechanical Sciences, 15, 47–54.
+https://doi.org/10.5194/ms-15-47-2024
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+Reconstructed from PDF; extraction and layout differ from the original.

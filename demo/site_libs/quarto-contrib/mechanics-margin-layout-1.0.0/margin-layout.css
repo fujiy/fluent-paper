@@ -1,0 +1,98 @@
+/* The source flow is also the no-script and print fallback for Quarto notes. */
+main.content .column-margin {
+  grid-column: body-content-start / body-content-end !important;
+  position: static; float: none; width: auto; height: auto !important;
+  margin-inline: 0;
+}
+.margin-layout-body-probe, .margin-layout-right-probe { height: 0; visibility: hidden; }
+.margin-layout-body-probe { grid-column: body-content-start / body-content-end; }
+/* No script, narrow viewports and print retain the original source flow. */
+.margin-scope[data-margin-end], .margin-scope-end { height: 0; margin: 0; padding: 0; }
+.margin-anchor { scroll-margin-top: 5rem; }
+.margin-layout-source { display: block; height: 0; }
+.margin-layout-toolbar { display: flex; justify-content: end; }
+.margin-layout-toolbar button { display: none; }
+.margin-layout-rail { display: none; }
+@media screen {
+  body.margin-layout-wide #quarto-content,
+  body.margin-layout-wide #quarto-content main.content,
+  body.margin-layout-wide #quarto-content main .page-columns.page-full {
+    display: grid !important;
+    max-width: none;
+    padding-inline: 0;
+    /* Quarto retains ownership of the left navigation and its gutter. */
+    grid-template-columns: [screen-start] 24px [screen-start-inset] 0
+      [page-start page-start-inset] var(--report-sidebar-track, var(--quarto-sidebar-width, 240px))
+      [body-start-outset] var(--report-side-gap, 24px) [body-start] 0
+      [body-content-start] minmax(0, 2fr) [body-content-end] 0
+      [body-end] var(--report-side-gap, 24px) [body-end-outset] 0 [margin-start]
+      minmax(0, 1fr) [margin-end page-end-inset page-end] 0
+      [screen-end-inset] 24px [screen-end];
+  }
+  body.margin-layout-wide #quarto-content {
+    /* Include the reading area, navigation, and both pairs of gutters. */
+    max-width: calc(1.5 * var(--report-body-width, 700px) + var(--report-sidebar-track, var(--quarto-sidebar-width, 240px)) + 2 * var(--report-side-gap, 24px) + 48px);
+    width: 100%;
+    margin-inline: auto;
+    box-sizing: border-box;
+  }
+  body.margin-layout-wide #quarto-content > main.content > * {
+    grid-column: body-content-start / body-content-end;
+  }
+  body.margin-layout-wide #quarto-content > main.content > .margin-layout-right-probe {
+    grid-column: margin-start / margin-end;
+  }
+  body.margin-layout-wide #quarto-content > main.content {
+    grid-column: screen-start / screen-end !important; grid-row: content-top / content-bottom;
+    overflow: visible; padding-inline: 0;
+  }
+  body.margin-layout-wide #quarto-margin-sidebar:has(#TOC) {
+    grid-column: page-start / body-start !important;
+    grid-row: content-top / content-bottom;
+  }
+  /* The chapter navigation ends before the axis gutter. */
+  body.margin-layout-wide #quarto-content > #report-chapter-sidebar {
+    grid-column: page-start / body-start-outset !important;
+    grid-row: content-top / content-bottom !important;
+    min-width: 0;
+  }
+  body.margin-layout-wide .margin-layout-adapter-host { display: contents; }
+  body.margin-layout-wide .margin-layout-managed {
+    position: fixed !important; top: 0 !important; right: auto !important;
+    margin: 0 !important; min-width: 0; box-sizing: border-box;
+    z-index: 20; background: var(--bs-body-bg, white);
+    color: var(--bs-body-color, #212529); overflow: auto;
+    overscroll-behavior: contain; overflow-anchor: none;
+    scrollbar-width: thin; border-block-start: 1px solid var(--bs-border-color, #ccc);
+    padding: .4rem; font-size: .9rem;
+  }
+  body.margin-layout-wide .margin-layout-managed.report-controls { padding: 0; }
+  .margin-layout-managed .margin-layout-toolbar { display: flex; justify-content: end; }
+  .margin-layout-managed .margin-layout-toolbar button {
+    display: inline-block;
+    color: var(--bs-link-color, #2780e3); background: transparent;
+    border: 0;
+    padding: .1rem .4rem; font: inherit; font-size: .8rem;
+  }
+  .margin-layout-pin-icon { width: 1rem; height: 1rem; vertical-align: -.125em;
+    fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+  .margin-layout-toolbar button[aria-pressed=true] .margin-layout-pin-head { fill: currentColor; }
+  .margin-layout-toolbar button:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+  body.margin-layout-wide .margin-layout-rail {
+    display: block; position: fixed; z-index: 19; overflow-y: auto;
+    overflow-x: hidden; scrollbar-width: thin; overscroll-behavior: contain;
+  }
+  .margin-layout-rail:focus-visible { outline: 2px solid var(--bs-link-color, #2780e3); }
+  .margin-layout-rail-spacer { width: 1px; pointer-events: none; }
+  body.margin-layout-wide .margin-layout-legacy-empty { display: none !important; }
+}
+@media print {
+  .margin-item, .margin-layout-managed {
+    position: static !important; transform: none !important; translate: none !important;
+    width: auto !important; max-height: none !important; height: auto !important;
+    overflow: visible !important; clip-path: none !important; visibility: visible !important;
+    break-inside: auto;
+  }
+  .margin-layout-toolbar, .margin-layout-source, .margin-layout-rail { display: none !important; }
+}
+

@@ -1,0 +1,25 @@
+"""Export ONLY the explicitly licensed publisher sample, never the library."""
+import hashlib,json,shutil
+from pathlib import Path
+from fluent_paper.cli import ROOT
+SAMPLE='86d547e94ca4c54d67c4c659'
+folder=ROOT/SAMPLE
+metadata=json.loads((folder/'publication.json').read_text())
+assert metadata['license']=='CC-BY-4.0'
+assert metadata['pdf_url']=='https://ms.copernicus.org/articles/15/47/2024/ms-15-47-2024.pdf'
+assert hashlib.sha256((folder/'source.pdf').read_bytes()).hexdigest().startswith(SAMPLE)
+source=folder/'site/_site';target=Path(__file__).resolve().parents[1]/'demo'
+if target.exists():shutil.rmtree(target)
+allowed={'.html','.css','.js','.png','.jpg','.jpeg','.svg','.woff','.woff2','.ttf','.eot','.pdf'}
+for path in source.rglob('*'):
+ if not path.is_file() or path.is_symlink():continue
+ relative=path.relative_to(source)
+ if any(p.startswith('.') for p in relative.parts):continue
+ if path.suffix not in allowed:continue
+ if path.suffix=='.pdf' and relative.as_posix()!='source.pdf':raise ValueError('Unexpected PDF')
+ dest=target/relative;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,dest)
+(target/'.nojekyll').write_text('')
+(target/'ATTRIBUTION.txt').write_text(metadata['citation']+'\n'+metadata['source']+'\nCC BY 4.0 https://creativecommons.org/licenses/by/4.0/\nReconstructed from PDF; extraction and layout differ from the original.\n')
+print(target)
+
+shutil.copyfile(Path(__file__).resolve().parents[1]/'src/fluent_paper/vendor/mathjax/LICENSE',target/'vendor/mathjax/LICENSE.txt')

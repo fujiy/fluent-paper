@@ -652,7 +652,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi" },
-    { name = "mineru", specifier = ">=4,<5" },
+    { name = "mineru", specifier = "==4.1.7" },
     { name = "python-multipart" },
     { name = "uvicorn" },
 ]
