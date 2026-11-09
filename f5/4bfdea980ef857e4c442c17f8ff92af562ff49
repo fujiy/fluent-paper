@@ -1,0 +1,54 @@
+tests/citations.test.cjs
+  s_fcbfb2e2b45915::t_88b3e86b7e3fed 1-11
+src/fluent_paper/cli.py
+  s_fcbfb2e2b45915::t_bc4c290572b7a7 108,129-135,137
+src/fluent_paper/references.py
+  s_fcbfb2e2b45915::t_71b0a08422a67d 62-74,77
+  s_fcbfb2e2b45915::t_555fe8f4548e7c 86
+  s_fcbfb2e2b45915::t_2bbae5eade241e 75-76
+  s_fcbfb2e2b45915::t_995a004d643f43 1-61,78-85,87-103
+src/fluent_paper/reader.py
+  s_fcbfb2e2b45915::t_d0aab4dafef4b3 48,203-205
+  s_fcbfb2e2b45915::t_555fe8f4548e7c 94
+  s_fcbfb2e2b45915::t_94d4a3fc378288 168-170
+  s_fcbfb2e2b45915::t_e13db62f6cab1e 59-64,66,69-71,73-78,80-93,95-104,106,108-118,121,143,151-156,174-202
+scripts/check_readers.py
+  s_fcbfb2e2b45915::t_79504c30e87d6a 1-36
+README.md
+  s_fcbfb2e2b45915::t_3f5fca708a6a1e 18,20-22,24,49,70
+VALIDATION.md
+  s_fcbfb2e2b45915::t_f16949bafa3dec 14-15,19-20,22,24
+src/fluent_paper/server.py
+  s_fcbfb2e2b45915::t_bc4c290572b7a7 1,29
+tests/test_structure.py
+  s_fcbfb2e2b45915::t_908ec725f29ec7 1-51
+  s_fcbfb2e2b45915::t_71b0a08422a67d 52-56
+  s_fcbfb2e2b45915::t_a8003f90a837d7 57-69
+src/fluent_paper/reader.css
+  s_fcbfb2e2b45915::t_bc4c290572b7a7 2-10
+src/fluent_paper/structure.py
+  s_fcbfb2e2b45915::t_67f2ecc0de6d6c 1-14,16-32,40-62,66-88,91-100,103-154,166-178,180-197
+  s_fcbfb2e2b45915::t_995a004d643f43 63-65,101-102
+  s_fcbfb2e2b45915::t_555fe8f4548e7c 89-90,155-165,179
+  s_fcbfb2e2b45915::t_0a9bacb406d7a2 15,33-39
+src/fluent_paper/reader.html
+  s_fcbfb2e2b45915::t_bc4c290572b7a7 8-13
+tests/reader.test.cjs
+  s_fcbfb2e2b45915::t_3f5fca708a6a1e 3,6,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f54bfdea980ef857e4c442c17f8ff92af562ff49",
+  "prompts": {},
+  "sessions": {
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
