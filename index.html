@@ -1,12 +1,9 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<meta charset="utf-8">
-<meta name="generator" content="quarto-1.10.18">
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-
-
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta charset="utf-8"/>
+<meta content="quarto-1.10.18" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
 <title>Swing-up control of double-inverted pendulum systems</title>
 <style>
 /* Default styles provided by pandoc.
@@ -26,27 +23,44 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
-
-
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
+<meta content="./" name="quarto:offset"/>
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet"/>
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-64a204ab8560d761af7679ceaba22944.css" id="quarto-text-highlighting-styles" rel="stylesheet"/>
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet"/>
+<link append-hash="true" data-mode="light" href="site_libs/bootstrap/bootstrap-445b8638c3d06994fee0907d791121c4.min.css" id="quarto-bootstrap" rel="stylesheet"/>
 <script src="site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.js"></script>
-<link href="site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.css" rel="stylesheet">
+<link href="site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.css" rel="stylesheet"/>
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -74,10 +88,7 @@ ul.task-list li input[type="checkbox"] {
     "search-label": "Search"
   }
 }</script>
-
-  
-  <script defer="" src="vendor/mathjax/tex-chtml.js" type="text/javascript"></script>
-
+<script defer="" src="vendor/mathjax/tex-chtml.js" type="text/javascript"></script>
 <script type="text/javascript">
 const typesetMath = (el) => {
   if (window.MathJax) {
@@ -104,1557 +115,1263 @@ window.Quarto = {
   typesetMath
 };
 </script>
-
-<link rel="stylesheet" href="reader.css">
+<link href="reader.css" rel="stylesheet"/>
 </head>
-
 <body class="floating quarto-light">
-
 <div id="quarto-search-results"></div>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div class="quarto-container page-columns page-rows-contents page-layout-article" id="quarto-content">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">Contents</h2>
-   
-  <ul>
-  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">1 Introduction</a></li>
-  <li><a href="#mathematical-modeling" id="toc-mathematical-modeling" class="nav-link" data-scroll-target="#mathematical-modeling">2 Mathematical modeling</a></li>
-  <li><a href="#stabilization-control-of-the-system" id="toc-stabilization-control-of-the-system" class="nav-link" data-scroll-target="#stabilization-control-of-the-system">3 Stabilization control of the system</a></li>
-  <li><a href="#linear-quadratic-regulator-lqr" id="toc-linear-quadratic-regulator-lqr" class="nav-link" data-scroll-target="#linear-quadratic-regulator-lqr">3.1 Linear quadratic regulator (LQR)</a></li>
-  <li><a href="#feedback-linearization-fbl" id="toc-feedback-linearization-fbl" class="nav-link" data-scroll-target="#feedback-linearization-fbl">3.2 Feedback linearization (FBL)</a></li>
-  <li><a href="#swing-up-control" id="toc-swing-up-control" class="nav-link" data-scroll-target="#swing-up-control">4 Swing-up control</a></li>
-  <li><a href="#boundary-value-problem-bvp-with-free-parameters" id="toc-boundary-value-problem-bvp-with-free-parameters" class="nav-link" data-scroll-target="#boundary-value-problem-bvp-with-free-parameters">4.1 Boundary value problem (BVP) with free parameters</a></li>
-  <li><a href="#partial-linearization-and-feedforward" id="toc-partial-linearization-and-feedforward" class="nav-link" data-scroll-target="#partial-linearization-and-feedforward">4.2 Partial linearization and feedforward</a></li>
-  <li><a href="#simulations" id="toc-simulations" class="nav-link" data-scroll-target="#simulations">5 Simulations</a></li>
-  <li><a href="#stabilization-control-simulation" id="toc-stabilization-control-simulation" class="nav-link" data-scroll-target="#stabilization-control-simulation">5.1 Stabilization control simulation</a></li>
-  <li><a href="#swing-up-control-simulation" id="toc-swing-up-control-simulation" class="nav-link" data-scroll-target="#swing-up-control-simulation">5.2 Swing-up control simulation</a></li>
-  <li><a href="#conclusions" id="toc-conclusions" class="nav-link" data-scroll-target="#conclusions">6 Conclusions</a></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
-  </ul>
+<nav class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto" id="quarto-sidebar">
+<nav class="toc-active" id="TOC" role="doc-toc">
+<h2 id="toc-title">Contents</h2>
+<ul>
+<li><a class="nav-link active" data-scroll-target="#sec-p1-b8" href="#sec-p1-b8" id="toc-sec-p1-b8">1 Introduction</a></li>
+<li><a class="nav-link" data-scroll-target="#sec-p2-b8" href="#sec-p2-b8" id="toc-sec-p2-b8">2 Mathematical modeling</a></li>
+<li><a class="nav-link" data-scroll-target="#sec-p3-b21" href="#sec-p3-b21" id="toc-sec-p3-b21">3 Stabilization control of the system</a>
+<ul>
+<li><a class="nav-link" data-scroll-target="#sec-p3-b23" href="#sec-p3-b23" id="toc-sec-p3-b23">3.1 Linear quadratic regulator (LQR)</a></li>
+<li><a class="nav-link" data-scroll-target="#sec-p4-b3" href="#sec-p4-b3" id="toc-sec-p4-b3">3.2 Feedback linearization (FBL)</a></li>
+</ul></li>
+<li><a class="nav-link" data-scroll-target="#sec-p4-b24" href="#sec-p4-b24" id="toc-sec-p4-b24">4 Swing-up control</a>
+<ul>
+<li><a class="nav-link" data-scroll-target="#sec-p5-b4" href="#sec-p5-b4" id="toc-sec-p5-b4">4.1 Boundary value problem (BVP) with free parameters</a></li>
+<li><a class="nav-link" data-scroll-target="#sec-p5-b16" href="#sec-p5-b16" id="toc-sec-p5-b16">4.2 Partial linearization and feedforward</a></li>
+</ul></li>
+<li><a class="nav-link" data-scroll-target="#sec-p6-b9" href="#sec-p6-b9" id="toc-sec-p6-b9">5 Simulations</a>
+<ul>
+<li><a class="nav-link" data-scroll-target="#sec-p6-b11" href="#sec-p6-b11" id="toc-sec-p6-b11">5.1 Stabilization control simulation</a></li>
+<li><a class="nav-link" data-scroll-target="#sec-p6-b15" href="#sec-p6-b15" id="toc-sec-p6-b15">5.2 Swing-up control simulation</a></li>
+</ul></li>
+<li><a class="nav-link" data-scroll-target="#sec-p7-b10" href="#sec-p7-b10" id="toc-sec-p7-b10">6 Conclusions</a></li>
+<li><a class="nav-link" data-scroll-target="#references" href="#references" id="toc-references">References</a></li>
+</ul>
 </nav>
 </nav>
-<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<div class="quarto-sidebar-collapse-item" data-bs-target=".quarto-sidebar-collapse-item" data-bs-toggle="collapse" id="quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-    </div>
+<div class="sidebar margin-sidebar zindex-bottom" id="quarto-margin-sidebar">
+</div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
+<header class="quarto-title-block default" id="title-block-header">
 <div class="quarto-title">
 <h1 class="title">Swing-up control of double-inverted pendulum systems</h1>
 </div>
-
-
-
 <div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
+</div>
 </header>
-
-
 <div class="reader-tools">
 <a href="source.pdf">Original PDF</a><button id="toggle-sources">Source links</button><button id="show-figures">Figures</button>
 </div>
 <div class="attribution">
 Al Juboori, A. M., Hussein, M. T., and Qanber, A. S. G. (2024). Swing-up control of double-inverted pendulum systems. Mechanical Sciences, 15, 47–54. · <a href="https://doi.org/10.5194/ms-15-47-2024">Publisher</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Reconstructed from PDF; layout and extraction corrections differ from the original.
 </div>
-<div id="p1-b3-scope" class="margin-scope" data-margin-end="p1-b3-scope-margin-end-1">
-
+<div class="margin-scope" data-margin-end="p1-b3-scope-margin-end-1" id="p1-b3-scope">
 </div>
-<div id="p1-b3" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b3">
 <p><strong>Ameen M. Al Juboori</strong><sup>1</sup><strong>, Mustafa Turki Hussein</strong><sup>2</sup><strong>, and Ali Sadiq Gafer Qanber</strong><sup>3</sup></p>
-<button class="source-button" data-block="p1-b3" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b3">
+p. 1
 </button>
 </div>
-<div id="p1-b3-scope-margin-end-1" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b3-scope-margin-end-1">
 </div>
-<div id="p1-b4-scope" class="margin-scope" data-margin-end="p1-b4-scope-margin-end-2">
-
+<div class="margin-scope" data-margin-end="p1-b4-scope-margin-end-2" id="p1-b4-scope">
 </div>
-<div id="p1-b4" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b4">
 <p><sup>1</sup>Biomedical Engineering Department, Al-Mustaqbal University College, Hillah, Iraq <sup>2</sup>Department of Mechanical Engineering, University of Babylon, College of Engineering, Hillah, Iraq <sup>3</sup>Department of Biomedical Engineering, University of Babylon, College of Engineering, Hillah, Iraq</p>
-<button class="source-button" data-block="p1-b4" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b4">
+p. 1
 </button>
 </div>
-<div id="p1-b4-scope-margin-end-2" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b4-scope-margin-end-2">
 </div>
-<div id="p1-b5-scope" class="margin-scope" data-margin-end="p1-b5-scope-margin-end-3">
-
+<div class="margin-scope" data-margin-end="p1-b5-scope-margin-end-3" id="p1-b5-scope">
 </div>
-<div id="p1-b5" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b5">
 <p><strong>Correspondence:</strong> Ameen M. Al Juboori (ameenal-juboori@mustaqbal-college.edu.iq)</p>
-<button class="source-button" data-block="p1-b5" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b5">
+p. 1
 </button>
 </div>
-<div id="p1-b5-scope-margin-end-3" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b5-scope-margin-end-3">
 </div>
-<div id="p1-b6-scope" class="margin-scope" data-margin-end="p1-b6-scope-margin-end-4">
-
+<div class="margin-scope" data-margin-end="p1-b6-scope-margin-end-4" id="p1-b6-scope">
 </div>
-<div id="p1-b6" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b6">
 <p>Received: 25 November 2022 – Revised: 4 May 2023 – Accepted: 9 November 2023 – Published: 29 January 2024</p>
-<button class="source-button" data-block="p1-b6" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b6">
+p. 1
 </button>
 </div>
-<div id="p1-b6-scope-margin-end-4" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b6-scope-margin-end-4">
 </div>
-<div id="p1-b7-scope" class="margin-scope" data-margin-end="p1-b7-scope-margin-end-5">
-
+<div class="margin-scope" data-margin-end="p1-b7-scope-margin-end-5" id="p1-b7-scope">
 </div>
-<div id="p1-b7" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b7">
 <p><strong>Abstract.</strong> This article deals with presenting a new swing-up control approach of a double-inverted pendulum on a trolley. The dynamic model of the double-inverted pendulum is derived and linearized. Two different linearization approaches are used: first, the traditional Taylor’s series approach and, second, using partial linearization. A state feedback control algorithm has been implemented based on the linearized model from Taylor’s series. Furthermore, a method for swinging up the pendulum to the inversion position from rest (swing-up) has been presented. The design and implementation of the swing-up function of the pendulum are implemented using the partial linearized model. The swing-up control procedure depends on using the feedforward–feedback controllers’ combination to transfer the pendulums from the downward to the upward position. The time-variant controller gain is used for the sake of the swing-up control procedure. The performances of these algorithms are shown in this paper through simulations.</p>
-<button class="source-button" data-block="p1-b7" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b7">
+p. 1
 </button>
 </div>
-<div id="p1-b7-scope-margin-end-5" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b7-scope-margin-end-5">
 </div>
-<div id="p1-b8" class="paper-block" data-source-page="1">
-<section id="introduction" class="level2">
-<h2 class="anchored" data-anchor-id="introduction">1 Introduction</h2>
-<button class="source-button" data-block="p1-b8" aria-label="View source, page 1">
-p.&nbsp;1
+<section class="level2" id="sec-p1-b8">
+<h2 class="anchored" data-anchor-id="sec-p1-b8">1 Introduction</h2>
+<div class="margin-scope" data-margin-end="p1-b9-scope-margin-end-6" id="p1-b9-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="1" id="p1-b9">
+<p>Non-linear, unstable, or underactuated systems are generally very difficult to control. Therefore, they are considered to be a challenge and are the subject of many technical reports, student projects, and academic papers. Their goal is not always to build a practically useful device but rather to develop or improve existing control algorithms, either by simulation or even experimentally to verify their applicability in general. The double-inverted pendulum model consists of several parts. A cart moves along a linear track, and two pendulums are connected to the carriage and each other by a rotational linkage (Fig. <a class="quarto-xref" href="#fig-1">1</a>). The input to the system is the torque of a DC motor, which is transmitted by a toothed belt as a force to the carriage. The system has one challenging equilibrium position in which the system can be stabilized, the upper (inverse) (see Fig. 1a–c). Furthermore, three configurations of the double-inverted pendulum, which are upperlower, lower-upper, and lower, are also considered as equilibrium positions. the lower equilibrium is always reached by the system (with the damping element) in finite time; control is needed to maintain the upper-lower, lower-upper, and inverse configurations in real conditions. The stabilization of the double-inverse pendulum is further understood in this paper as a regulation to maintain its inverse position.</p>
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b9">
+p. 1
 </button>
-</section>
+<p><button aria-label="View source, page 1" class="source-button" data-block="p1-b10">p. 1</button></p>
 </div>
-<div id="p1-b9-scope" class="margin-scope" data-margin-end="p1-b9-scope-margin-end-6">
-
+<div class="margin-scope-end" id="p1-b9-scope-margin-end-6">
 </div>
-<div id="p1-b9" class="paper-block" data-source-page="1">
-<p>Non-linear, unstable, or underactuated systems are generally very difficult to control. Therefore, they are considered to be a challenge and are the subject of many technical reports, student projects, and academic papers. Their goal is not always to build a practically useful device but rather to develop or improve existing control algorithms, either by simulation or even experimentally to verify their applicability in general. The double-inverted pendulum model consists of several parts. A cart moves along a linear track, and two pendulums are connected to the carriage and each other by a rotational linkage (Fig. 1). The input to the system is the torque of a DC motor, which is transmitted by a toothed belt as a force to the carriage. The system has one challenging equilibrium position in which the system can be stabilized, the upper (inverse) (see Fig. 1a–c). Furthermore, three configurations of the double-inverted pendulum, which are upperlower, lower-upper, and lower, are also considered as equilibrium positions. the lower equilibrium is always reached by the system (with the damping element) in finite time; control is needed to maintain the upper-lower, lower-upper, and inverse configurations in real conditions. The stabilization of</p>
-<button class="source-button" data-block="p1-b9" aria-label="View source, page 1">
-p.&nbsp;1
+<div class="paper-block margin-item" data-margin-for="p1-b9-scope p1-b11-scope" data-source-page="2" id="p2-b2">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-1">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<p><img class="img-fluid figure-img" src="images/page_1_image_2.jpg"/></p>
+<ol type="a">
+<li>Lower equilibrium position, (b) swing-up, and (c) upper equilibrium position.</li>
+</ol>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig quarto-uncaptioned" id="fig-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 1
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b2">
+p. 2
 </button>
 </div>
-<div id="p1-b9-scope-margin-end-6" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p1-b11-scope-margin-end-7" id="p1-b11-scope">
 </div>
-<div id="p1-b10-scope" class="margin-scope" data-margin-end="p1-b10-scope-margin-end-7">
-
-</div>
-<div id="p1-b10" class="paper-block" data-source-page="1">
-<p>the double-inverse pendulum is further understood in this paper as a regulation to maintain its inverse position.</p>
-<button class="source-button" data-block="p1-b10" aria-label="View source, page 1">
-p.&nbsp;1
-</button>
-</div>
-<div id="p1-b10-scope-margin-end-7" class="margin-scope-end">
-
-</div>
-<div id="p1-b11-scope" class="margin-scope" data-margin-end="p1-b11-scope-margin-end-8">
-
-</div>
-<div id="p1-b11" class="paper-block" data-source-page="1">
+<div class="paper-block prose-block" data-source-page="1" id="p1-b11">
 <p>The next task of the control program is to be the so-called swing-up. This term refers to the realization of such a movement of the carriage that brings the system from the lower equilibrium position to the inverse position. The situation is indicated in Fig. 1c. The control requirement is primarily for the robustness and repeatability of the swing-up. There are several published articles with different methods addressing the swing-up problem of a double-inverted pendulum. However, in the vast majority of cases, these are only simulations that have not been experimentally verified on a real system.</p>
-<button class="source-button" data-block="p1-b11" aria-label="View source, page 1">
-p.&nbsp;1
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b11">
+p. 1
 </button>
 </div>
-<div id="p1-b11-scope-margin-end-8" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p1-b11-scope-margin-end-7">
 </div>
-<div id="p1-b12-scope" class="margin-scope" data-margin-end="p1-b12-scope-margin-end-9">
-
+<div class="margin-scope" data-margin-end="p1-b12-scope-margin-end-8" id="p1-b12-scope">
 </div>
-<div id="p1-b12" class="paper-block" data-source-page="1">
-<p>A mathematical model of this system was derived based on the Lagrangian mechanics; the dynamic model is discretized, and then the Laguerre series is implemented in model pre-dictive control technology to trace the control signal for the system (Qian et al., 2011). An RNA genetic algorithm with fuzzy logic is used to control the pendulum system, where the fuzzy logic controller can improve the performance of the controller by using the RNA genetic algorithm to find certain optimal membership functions (Sun et al., 2015). The technical report compares the linear quadratic regulator, the state-dependent Riccati equation (SDRE), and the</p>
-<button class="source-button" data-block="p1-b12" aria-label="View source, page 1">
-p.&nbsp;1
+<div class="paper-block prose-block" data-source-page="1" id="p1-b12">
+<p>A mathematical model of this system was derived based on the Lagrangian mechanics; the dynamic model is discretized, and then the Laguerre series is implemented in model pre-dictive control technology to trace the control signal for the system <span class="citation" data-cites="paper-ref-12">(<a href="#ref-paper-ref-12" role="doc-biblioref">Qian et al., 2011</a>)</span>. An RNA genetic algorithm with fuzzy logic is used to control the pendulum system, where the fuzzy logic controller can improve the performance of the controller by using the RNA genetic algorithm to find certain optimal membership functions <span class="citation" data-cites="paper-ref-13">(<a href="#ref-paper-ref-13" role="doc-biblioref">Sun et al., 2015</a>)</span>. The technical report compares the linear quadratic regulator, the state-dependent Riccati equation (SDRE), and the use of neural networks (NNs) and concludes that the NNs have a limited capability to improve the SDRE performance <span class="citation" data-cites="paper-ref-2">(<a href="#ref-paper-ref-2" role="doc-biblioref">Bogdanov, 2004</a>)</span>. Adaptive sliding-mode control in combination with a fuzzy neural network is used to control a double-inverted pendulum. The fuzzy neural network is designed as a system controller, and the adaptive sliding mode is designed to carry out the disturbance problem <span class="citation" data-cites="paper-ref-9">(<a href="#ref-paper-ref-9" role="doc-biblioref">Mon and Lin, 2014</a>)</span>.</p>
+<button aria-label="View source, page 1" class="source-button" data-block="p1-b12">
+p. 1
+</button>
+<p><button aria-label="View source, page 2" class="source-button" data-block="p2-b3">p. 2</button></p>
+</div>
+<div class="margin-scope-end" id="p1-b12-scope-margin-end-8">
+</div>
+<div class="margin-scope" data-margin-end="p2-b4-scope-margin-end-9" id="p2-b4-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="2" id="p2-b4">
+<p>In the previous literature, the dynamic model of the double-inverted pendulum system is linearized around an operating point to design a linear controller. An alternative to the above dynamic linearization is partial feedback linearization – splitting the generalized coordinates into a regularization whose dimensions are given by the number of inputs, and variables consider only zero dynamics <span class="citation" data-cites="paper-ref-5 paper-ref-10">(<a href="#ref-paper-ref-5" role="doc-biblioref">Hedrick and Girard, 2010</a>; <a href="#ref-paper-ref-10" role="doc-biblioref">Neusser and Valášek, 2013</a>)</span>. This path of linearization is used to design the swing-up function of the double-inverted pendulum <span class="citation" data-cites="paper-ref-5">(<a href="#ref-paper-ref-5" role="doc-biblioref">Hedrick and Girard, 2010</a>)</span>. A more detailed description of the method can be found in the swing-up control practical example <span class="citation" data-cites="paper-ref-10">(<a href="#ref-paper-ref-10" role="doc-biblioref">Neusser and Valášek, 2013</a>)</span>. Swing-up control of the double-inverted system was proposed to separate pendulums and to control each one distinctly <span class="citation" data-cites="paper-ref-6">(<a href="#ref-paper-ref-6" role="doc-biblioref">Henmi et al., 2014</a>)</span>. A non-linear model predictive control is used to build up a control algorithm for swingup motion <span class="citation" data-cites="paper-ref-8">(<a href="#ref-paper-ref-8" role="doc-biblioref">Jaiwat and Ohtsuka, 2014</a>)</span>. A method for controlling the energy of the system with partial linearization is presented, and passivity-based control is utilized in the work <span class="citation" data-cites="paper-ref-14">(<a href="#ref-paper-ref-14" role="doc-biblioref">Zhong and Rock, 2001</a>)</span>. The solution of the boundary value problem with free parameters is used to generate the control approach <span class="citation" data-cites="paper-ref-4">(<a href="#ref-paper-ref-4" role="doc-biblioref">Graichen et al., 2007</a>)</span></p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b4">
+p. 2
 </button>
 </div>
-<div id="p1-b12-scope-margin-end-9" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b4-scope-margin-end-9">
 </div>
-<div id="p2-b2" class="paper-block margin-item" data-source-page="2" data-margin-for="p1-b9-scope">
-<p><img src="images/page_1_image_2.jpg" class="img-fluid"></p>
-<p>Figure 1. (a) Lower equilibrium position, (b) swing-up, and (c) upper equilibrium position.</p>
-<button class="source-button" data-block="p2-b2" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="margin-scope" data-margin-end="p2-b5-scope-margin-end-10" id="p2-b5-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="2" id="p2-b5">
+<p>The motivation of this work was mainly to demonstrate the theoretical swing-up control procedures on a model of a double-inverted pendulum. Indeed, there are not many publications that deal with the application of the proposed algorithms on a real mechanism. The paper focuses on the theoretical basis for the following part. It consists of an explanation of the terms used and a search of the studied area in terms of stabilization and swing-up. It also includes the derivation of the equations of motion and the presentation of the existing double-pendulum model. Furthermore, this study serves to apply a linear quadratic controller and a Kalman filter and lastly to implement the swing-up function. The boundary value problem is solved to generate the trajectory for the swing-up motion of the pendulums. The partial linear realization method is used to linearize the system dynamically during the swing-up process. Dynamic input–output decoupling is used to keep the system in a stable position after the pendulums reach the upper unstable position <span class="citation" data-cites="paper-ref-12">(<a href="#ref-paper-ref-12" role="doc-biblioref">Qian et al., 2011</a>)</span>.</p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b5">
+p. 2
 </button>
+<p><button aria-label="View source, page 2" class="source-button" data-block="p2-b6">p. 2</button></p>
 </div>
-<div id="p2-b3-scope" class="margin-scope" data-margin-end="p2-b3-scope-margin-end-10">
-
+<div class="margin-scope-end" id="p2-b5-scope-margin-end-10">
 </div>
-<div id="p2-b3" class="paper-block" data-source-page="2">
-<p>use of neural networks (NNs) and concludes that the NNs have a limited capability to improve the SDRE performance (Bogdanov et al., 2004). Adaptive sliding-mode control in combination with a fuzzy neural network is used to control a double-inverted pendulum. The fuzzy neural network is designed as a system controller, and the adaptive sliding mode is designed to carry out the disturbance problem (Mon and Lin, 2014).</p>
-<button class="source-button" data-block="p2-b3" aria-label="View source, page 2">
-p.&nbsp;2
-</button>
+<div class="margin-scope" data-margin-end="p2-b7-scope-margin-end-11" id="p2-b7-scope">
 </div>
-<div id="p2-b3-scope-margin-end-10" class="margin-scope-end">
-
-</div>
-<div id="p2-b4-scope" class="margin-scope" data-margin-end="p2-b4-scope-margin-end-11">
-
-</div>
-<div id="p2-b4" class="paper-block" data-source-page="2">
-<p>In the previous literature, the dynamic model of the double-inverted pendulum system is linearized around an operating point to design a linear controller. An alternative to the above dynamic linearization is partial feedback linearization – splitting the generalized coordinates into a regularization whose dimensions are given by the number of inputs, and variables consider only zero dynamics (Hedrick and Girard, 2010; Neusser and Valášek, 2013). This path of linearization is used to design the swing-up function of the double-inverted pendulum (Hedrick and Girard, 2010). A more detailed description of the method can be found in the swing-up control practical example (Neusser and Valášek, 2013). Swing-up control of the double-inverted system was proposed to separate pendulums and to control each one distinctly (Henmi et al., 2014). A non-linear model predictive control is used to build up a control algorithm for swingup motion (Jaiwat and Ohtsuka, 2014). A method for controlling the energy of the system with partial linearization is presented, and passivity-based control is utilized in the work (Zhong and Rock, 2001). The solution of the boundary value problem with free parameters is used to generate the control approach (Graichen et al., 2007)</p>
-<button class="source-button" data-block="p2-b4" aria-label="View source, page 2">
-p.&nbsp;2
-</button>
-</div>
-<div id="p2-b4-scope-margin-end-11" class="margin-scope-end">
-
-</div>
-<div id="p2-b5-scope" class="margin-scope" data-margin-end="p2-b5-scope-margin-end-12">
-
-</div>
-<div id="p2-b5" class="paper-block" data-source-page="2">
-<p>The motivation of this work was mainly to demonstrate the theoretical swing-up control procedures on a model of a double-inverted pendulum. Indeed, there are not many publications that deal with the application of the proposed algorithms on a real mechanism. The paper focuses on the theoretical basis for the following part. It consists of an explanation of the terms used and a search of the studied area</p>
-<button class="source-button" data-block="p2-b5" aria-label="View source, page 2">
-p.&nbsp;2
-</button>
-</div>
-<div id="p2-b5-scope-margin-end-12" class="margin-scope-end">
-
-</div>
-<div id="p2-b6-scope" class="margin-scope" data-margin-end="p2-b6-scope-margin-end-13">
-
-</div>
-<div id="p2-b6" class="paper-block" data-source-page="2">
-<p>in terms of stabilization and swing-up. It also includes the derivation of the equations of motion and the presentation of the existing double-pendulum model. Furthermore, this study serves to apply a linear quadratic controller and a Kalman filter and lastly to implement the swing-up function. The boundary value problem is solved to generate the trajectory for the swing-up motion of the pendulums. The partial linear realization method is used to linearize the system dynamically during the swing-up process. Dynamic input–output decoupling is used to keep the system in a stable position after the pendulums reach the upper unstable position (Qian et al., 2011).</p>
-<button class="source-button" data-block="p2-b6" aria-label="View source, page 2">
-p.&nbsp;2
-</button>
-</div>
-<div id="p2-b6-scope-margin-end-13" class="margin-scope-end">
-
-</div>
-<div id="p2-b7-scope" class="margin-scope" data-margin-end="p2-b7-scope-margin-end-14">
-
-</div>
-<div id="p2-b7" class="paper-block" data-source-page="2">
+<div class="paper-block prose-block" data-source-page="2" id="p2-b7">
 <p>The rest of the paper is organized as follows: in the following section, the mathematical model is derived; next, the stabilization control is presented; after that, the swing-up procedure is detailed; later, the simulation of the work is addressed, and the article conclusions are shown in the last section.</p>
-<button class="source-button" data-block="p2-b7" aria-label="View source, page 2">
-p.&nbsp;2
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b7">
+p. 2
 </button>
 </div>
-<div id="p2-b7-scope-margin-end-14" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b7-scope-margin-end-11">
 </div>
-<div id="p2-b8" class="paper-block" data-source-page="2">
-<section id="mathematical-modeling" class="level2">
-<h2 class="anchored" data-anchor-id="mathematical-modeling">2 Mathematical modeling</h2>
-<button class="source-button" data-block="p2-b8" aria-label="View source, page 2">
-p.&nbsp;2
-</button>
 </section>
+<section class="level2" id="sec-p2-b8">
+<h2 class="anchored" data-anchor-id="sec-p2-b8">2 Mathematical modeling</h2>
+<div class="margin-scope" data-margin-end="p2-b9-scope-margin-end-12" id="p2-b9-scope">
 </div>
-<div id="p2-b9-scope" class="margin-scope" data-margin-end="p2-b9-scope-margin-end-15">
-
-</div>
-<div id="p2-b9" class="paper-block" data-source-page="2">
-<p>Figure 2 schematically shows the double-inverted pendulum model. The meaning of the individual variables is evident from the figure. The system has 3 degrees of freedom – the sliding motion of the carriage and the rotational motions of the two pendulums. A vector of state variables is constructed as the displacement of the carriage or the rotation of the pendulums and the velocity of the carriage or the angular velocity of the pendulums:</p>
-<button class="source-button" data-block="p2-b9" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block prose-block" data-source-page="2" id="p2-b9">
+<p>Figure <a class="quarto-xref" href="#fig-2">2</a> schematically shows the double-inverted pendulum model. The meaning of the individual variables is evident from the figure. The system has 3 degrees of freedom – the sliding motion of the carriage and the rotational motions of the two pendulums. A vector of state variables is constructed as the displacement of the carriage or the rotation of the pendulums and the velocity of the carriage or the angular velocity of the pendulums:</p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b9">
+p. 2
 </button>
 </div>
-<div id="p2-b9-scope-margin-end-15" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b9-scope-margin-end-12">
 </div>
-<div id="p2-b10" class="paper-block" data-source-page="2" data-equation-image="images/page_1_equation_11.jpg">
-<p><span class="math display">\[
-\boldsymbol {\theta} = \left[ \theta_ {0}, \theta_ {1}, \theta_ {2}, \dot {\theta} _ {0}, \dot {\theta} _ {1}, \dot {\theta} _ {2} \right] ^ {T}.\tag{1}
-\]</span></p>
-<button class="source-button" data-block="p2-b10" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block margin-item" data-margin-for="p2-b9-scope" data-source-page="3" id="p3-b2">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-2">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_2_image_2.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-2-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 2: Schematic of the double-inverted pendulum model.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b2">
+p. 3
 </button>
 </div>
-<div id="p2-b11-scope" class="margin-scope" data-margin-end="p2-b11-scope-margin-end-16">
-
+<div class="paper-block" data-equation-image="images/page_1_equation_11.jpg" data-source-page="2" id="p2-b10">
+<p><span id="eq-1"><span class="math display">\[
+\boldsymbol {\theta} = \left[ \theta_ {0}, \theta_ {1}, \theta_ {2}, \dot {\theta} _ {0}, \dot {\theta} _ {1}, \dot {\theta} _ {2} \right] ^ {T}.
+\tag{1}\]</span></span></p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b10">
+p. 2
+</button>
 </div>
-<div id="p2-b11" class="paper-block" data-source-page="2">
+<div class="margin-scope" data-margin-end="p2-b11-scope-margin-end-13" id="p2-b11-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="2" id="p2-b11">
 <p>For input u, the problem of obtaining a mathematical model is a search for an equation of motion of the following form:</p>
-<button class="source-button" data-block="p2-b11" aria-label="View source, page 2">
-p.&nbsp;2
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b11">
+p. 2
 </button>
 </div>
-<div id="p2-b11-scope-margin-end-16" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b11-scope-margin-end-13">
 </div>
-<div id="p2-b12" class="paper-block" data-source-page="2" data-equation-image="images/page_1_equation_13.jpg">
-<p><span class="math display">\[
-\dot {\boldsymbol {\theta}} = \boldsymbol {f} (\boldsymbol {\theta}) + \boldsymbol {g} (\boldsymbol {\theta} u).\tag{2}
-\]</span></p>
-<button class="source-button" data-block="p2-b12" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block" data-equation-image="images/page_1_equation_13.jpg" data-source-page="2" id="p2-b12">
+<p><span id="eq-2"><span class="math display">\[
+\dot {\boldsymbol {\theta}} = \boldsymbol {f} (\boldsymbol {\theta}) + \boldsymbol {g} (\boldsymbol {\theta} u).
+\tag{2}\]</span></span></p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b12">
+p. 2
 </button>
 </div>
-<div id="p2-b13-scope" class="margin-scope" data-margin-end="p2-b13-scope-margin-end-17">
-
+<div class="margin-scope" data-margin-end="p2-b13-scope-margin-end-14" id="p2-b13-scope">
 </div>
-<div id="p2-b13" class="paper-block" data-source-page="2">
+<div class="paper-block prose-block" data-source-page="2" id="p2-b13">
 <p>Lagrange’s equations of the second kind were used for this purpose. The mathematical model of the double-inverse pendulum can be expressed as the sum of or difference between the partial derivatives of the mechanical energies according to the respective independent variables and their derivatives:</p>
-<button class="source-button" data-block="p2-b13" aria-label="View source, page 2">
-p.&nbsp;2
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b13">
+p. 2
 </button>
 </div>
-<div id="p2-b13-scope-margin-end-17" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b13-scope-margin-end-14">
 </div>
-<div id="p2-b14" class="paper-block" data-source-page="2" data-equation-image="images/page_1_equation_15.jpg">
-<p><span class="math display">\[
-\frac {\mathrm{d}}{\mathrm{d} t} \left(\frac {\partial \boldsymbol {E} _ {K}}{\dot {\boldsymbol {\theta}} _ {i}}\right) - \frac {\partial \boldsymbol {E} _ {K}}{\boldsymbol {\theta} _ {i}} + \frac {\partial \boldsymbol {D}}{\boldsymbol {\theta} _ {i}} + \frac {\partial \boldsymbol {E} _ {P}}{\boldsymbol {\theta} _ {i}} = \frac {\partial \boldsymbol {W} _ {\mathrm{e}}}{\boldsymbol {\theta} _ {i}} = \frac {\partial \boldsymbol {P} _ {e}}{\dot {\boldsymbol {\theta}} _ {i}},\tag{3}
-\]</span></p>
-<button class="source-button" data-block="p2-b14" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block" data-equation-image="images/page_1_equation_15.jpg" data-source-page="2" id="p2-b14">
+<p><span id="eq-3"><span class="math display">\[
+\frac {\mathrm{d}}{\mathrm{d} t} \left(\frac {\partial \boldsymbol {E} _ {K}}{\dot {\boldsymbol {\theta}} _ {i}}\right) - \frac {\partial \boldsymbol {E} _ {K}}{\boldsymbol {\theta} _ {i}} + \frac {\partial \boldsymbol {D}}{\boldsymbol {\theta} _ {i}} + \frac {\partial \boldsymbol {E} _ {P}}{\boldsymbol {\theta} _ {i}} = \frac {\partial \boldsymbol {W} _ {\mathrm{e}}}{\boldsymbol {\theta} _ {i}} = \frac {\partial \boldsymbol {P} _ {e}}{\dot {\boldsymbol {\theta}} _ {i}},
+\tag{3}\]</span></span></p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b14">
+p. 2
 </button>
 </div>
-<div id="p2-b15-scope" class="margin-scope" data-margin-end="p2-b15-scope-margin-end-18">
-
+<div class="margin-scope" data-margin-end="p2-b15-scope-margin-end-15" id="p2-b15-scope">
 </div>
-<div id="p2-b15" class="paper-block" data-source-page="2">
-<p>where <span class="math inline">\(\mathrm{E}_{\mathrm{K}}\)</span> and <span class="math inline">\(\mathrm{E_p}\)</span> are the kinetic and the potential energy. D denotes the dissipative component, <span class="math inline">\(W_{e}\)</span> denotes the work of external forces, and <span class="math inline">\(P_{\mathrm{e}}\)</span> denotes their power. For individual bodies, the kinetic, potential, and dissipative energies and external forces can be expressed (Bogdanov, 2004).</p>
-<button class="source-button" data-block="p2-b15" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block prose-block" data-source-page="2" id="p2-b15">
+<p>where <span class="math inline">\(\mathrm{E}_{\mathrm{K}}\)</span> and <span class="math inline">\(\mathrm{E_p}\)</span> are the kinetic and the potential energy. D denotes the dissipative component, <span class="math inline">\(W_{e}\)</span> denotes the work of external forces, and <span class="math inline">\(P_{\mathrm{e}}\)</span> denotes their power. For individual bodies, the kinetic, potential, and dissipative energies and external forces can be expressed <span class="citation" data-cites="paper-ref-2">(<a href="#ref-paper-ref-2" role="doc-biblioref">Bogdanov, 2004</a>)</span>.</p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b15">
+p. 2
 </button>
 </div>
-<div id="p2-b15-scope-margin-end-18" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b15-scope-margin-end-15">
 </div>
-<div id="p2-b16-scope" class="margin-scope" data-margin-end="p2-b16-scope-margin-end-19">
-
+<div class="margin-scope" data-margin-end="p2-b16-scope-margin-end-16" id="p2-b16-scope">
 </div>
-<div id="p2-b16" class="paper-block" data-source-page="2">
+<div class="paper-block prose-block" data-source-page="2" id="p2-b16">
 <p>The velocity energies of the centers of gravity of the pendulums can be obtained from the time derivative of their position vector.</p>
-<button class="source-button" data-block="p2-b16" aria-label="View source, page 2">
-p.&nbsp;2
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b16">
+p. 2
 </button>
 </div>
-<div id="p2-b16-scope-margin-end-19" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p2-b16-scope-margin-end-16">
 </div>
-<div id="p2-b17" class="paper-block" data-source-page="2" data-equation-image="images/page_1_equation_18.jpg">
-<p><span class="math display">\[
-E _ {\mathrm{K} _ {0}} = \frac {1}{2} m _ {0} \dot {\theta} _ {0} ^ {2} + \frac {1}{2} I _ {0} \omega_ {0} ^ {2} = \frac {1}{2} m _ {0} \dot {\theta} _ {0} ^ {2} + \frac {1}{2} \frac {I _ {0}}{R _ {0} ^ {2}} \dot {\theta} _ {0} ^ {2}\tag{4}
-\]</span></p>
-<button class="source-button" data-block="p2-b17" aria-label="View source, page 2">
-p.&nbsp;2
+<div class="paper-block" data-equation-image="images/page_1_equation_18.jpg" data-source-page="2" id="p2-b17">
+<p><span id="eq-4"><span class="math display">\[
+E _ {\mathrm{K} _ {0}} = \frac {1}{2} m _ {0} \dot {\theta} _ {0} ^ {2} + \frac {1}{2} I _ {0} \omega_ {0} ^ {2} = \frac {1}{2} m _ {0} \dot {\theta} _ {0} ^ {2} + \frac {1}{2} \frac {I _ {0}}{R _ {0} ^ {2}} \dot {\theta} _ {0} ^ {2}
+\tag{4}\]</span></span></p>
+<button aria-label="View source, page 2" class="source-button" data-block="p2-b17">
+p. 2
 </button>
 </div>
-<div id="p3-b2" class="paper-block margin-item" data-source-page="3" data-margin-for="p2-b9-scope">
-<p><img src="images/page_2_image_2.jpg" class="img-fluid"></p>
-<p>Figure 2. Schematic of the double-inverted pendulum model.</p>
-<button class="source-button" data-block="p3-b2" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_4.jpg" data-source-page="3" id="p3-b3">
+<p><span id="eq-5"><span class="math display">\[
+E _ {\mathrm{K} _ {1}} = \frac {1}{2} m _ {1} \left[ \left(\dot {\theta} _ {0} + l _ {1} \dot {\theta} _ {1} \cos \theta_ {1}\right) ^ {2} + \left(l _ {1} \dot {\theta} _ {1} \sin \theta_ {1}\right) ^ {2} \right] + \frac {1}{2} l _ {1} \dot {\theta} _ {1} ^ {2}
+\tag{5}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b3">
+p. 3
 </button>
 </div>
-<div id="p3-b3" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_4.jpg">
-<p><span class="math display">\[
-E _ {\mathrm{K} _ {1}} = \frac {1}{2} m _ {1} \left[ \left(\dot {\theta} _ {0} + l _ {1} \dot {\theta} _ {1} \cos \theta_ {1}\right) ^ {2} + \left(l _ {1} \dot {\theta} _ {1} \sin \theta_ {1}\right) ^ {2} \right] + \frac {1}{2} l _ {1} \dot {\theta} _ {1} ^ {2}\tag{5}
-\]</span></p>
-<button class="source-button" data-block="p3-b3" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_5.jpg" data-source-page="3" id="p3-b4">
+<p><span id="eq-6"><span class="math display">\[
+\begin{array}{c} E _ {\mathrm{K} _ {2}} = \frac {1}{2} m _ {2} \Big [ \big (\dot {\theta} _ {0} + L _ {1} \dot {\theta} _ {1} \cos \theta_ {1} + l _ {2} \dot {\theta} _ {2} \cos \theta_ {2} \big) ^ {2} \\ \quad + \big (L _ {1} \dot {\theta} _ {1} \sin \theta_ {1} + l _ {2} \dot {\theta} _ {2} \sin \theta_ {2} \big) ^ {2} \Big ] + \frac {1}{2} I _ {2} \dot {\theta} _ {2} ^ {2} \end{array}
+\tag{6}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b4">
+p. 3
 </button>
 </div>
-<div id="p3-b4" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_5.jpg">
-<p><span class="math display">\[
-\begin{array}{c} E _ {\mathrm{K} _ {2}} = \frac {1}{2} m _ {2} \Big [ \big (\dot {\theta} _ {0} + L _ {1} \dot {\theta} _ {1} \cos \theta_ {1} + l _ {2} \dot {\theta} _ {2} \cos \theta_ {2} \big) ^ {2} \\ \quad + \big (L _ {1} \dot {\theta} _ {1} \sin \theta_ {1} + l _ {2} \dot {\theta} _ {2} \sin \theta_ {2} \big) ^ {2} \Big ] + \frac {1}{2} I _ {2} \dot {\theta} _ {2} ^ {2} \end{array}\tag{6}
-\]</span></p>
-<button class="source-button" data-block="p3-b4" aria-label="View source, page 3">
-p.&nbsp;3
-</button>
+<div class="margin-scope" data-margin-end="p3-b5-scope-margin-end-17" id="p3-b5-scope">
 </div>
-<div id="p3-b5-scope" class="margin-scope" data-margin-end="p3-b5-scope-margin-end-20">
-
-</div>
-<div id="p3-b5" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b5">
 <p>Potential energy is as follows:</p>
-<button class="source-button" data-block="p3-b5" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b5">
+p. 3
 </button>
 </div>
-<div id="p3-b5-scope-margin-end-20" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b5-scope-margin-end-17">
 </div>
-<div id="p3-b6" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_7.jpg">
-<p><span class="math display">\[
-\begin{array}{c} E _ {P _ {0}} = 0, E _ {P _ {1}} = m _ {1} g l _ {1} \cos \theta_ {1}, E _ {P _ {2}} \\ = m _ {2} g (L _ {1} \cos \theta_ {1} + l _ {2} \cos \theta_ {2}). \end{array}\tag{7}
-\]</span></p>
-<button class="source-button" data-block="p3-b6" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_7.jpg" data-source-page="3" id="p3-b6">
+<p><span id="eq-7"><span class="math display">\[
+\begin{array}{c} E _ {P _ {0}} = 0, E _ {P _ {1}} = m _ {1} g l _ {1} \cos \theta_ {1}, E _ {P _ {2}} \\ = m _ {2} g (L _ {1} \cos \theta_ {1} + l _ {2} \cos \theta_ {2}). \end{array}
+\tag{7}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b6">
+p. 3
 </button>
 </div>
-<div id="p3-b7-scope" class="margin-scope" data-margin-end="p3-b7-scope-margin-end-21">
-
+<div class="margin-scope" data-margin-end="p3-b7-scope-margin-end-18" id="p3-b7-scope">
 </div>
-<div id="p3-b7" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b7">
 <p>The dissipative component is as follows:</p>
-<button class="source-button" data-block="p3-b7" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b7">
+p. 3
 </button>
 </div>
-<div id="p3-b7-scope-margin-end-21" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b7-scope-margin-end-18">
 </div>
-<div id="p3-b8" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_9.jpg">
-<p><span class="math display">\[
-\begin{array}{l} D _ {0} = \frac {1}{2} b _ {0} \dot {\theta} _ {0} ^ {2}, D _ {1} = \frac {1}{2} b _ {1} \dot {\theta} _ {1} ^ {2} + \frac {1}{2} b _ {2} \big (\dot {\theta} _ {2} - \dot {\theta} _ {1} \big) ^ {2}, \\ D _ {2} = \frac {1}{2} b _ {2} \big (\dot {\theta} _ {2} - \dot {\theta} _ {1} \big) ^ {2}. \end{array}\tag{8}
-\]</span></p>
-<button class="source-button" data-block="p3-b8" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_9.jpg" data-source-page="3" id="p3-b8">
+<p><span id="eq-8"><span class="math display">\[
+\begin{array}{l} D _ {0} = \frac {1}{2} b _ {0} \dot {\theta} _ {0} ^ {2}, D _ {1} = \frac {1}{2} b _ {1} \dot {\theta} _ {1} ^ {2} + \frac {1}{2} b _ {2} \big (\dot {\theta} _ {2} - \dot {\theta} _ {1} \big) ^ {2}, \\ D _ {2} = \frac {1}{2} b _ {2} \big (\dot {\theta} _ {2} - \dot {\theta} _ {1} \big) ^ {2}. \end{array}
+\tag{8}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b8">
+p. 3
 </button>
 </div>
-<div id="p3-b9-scope" class="margin-scope" data-margin-end="p3-b9-scope-margin-end-22">
-
+<div class="margin-scope" data-margin-end="p3-b9-scope-margin-end-19" id="p3-b9-scope">
 </div>
-<div id="p3-b9" class="paper-block" data-source-page="3">
-<p>In Eqs. (4)–(8), the <span class="math inline">\(\theta_{j}\)</span> represents the motion variable; <span class="math inline">\(m_{j}\)</span> is the mass; <span class="math inline">\(b_{j}\)</span> is the viscous friction constant; and <span class="math inline">\(j = 0,1,2\)</span> stands for cart and first and second pendulum, respectively. <span class="math inline">\(I_{0}\)</span> is the inertia of the pulley, and <span class="math inline">\(l_{1,2}\)</span> are the lengths of the pendulums.</p>
-<button class="source-button" data-block="p3-b9" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block prose-block" data-source-page="3" id="p3-b9">
+<p>In Eqs. (<a class="quarto-xref" href="#eq-4">4</a>)–(<a class="quarto-xref" href="#eq-8">8</a>), the <span class="math inline">\(\theta_{j}\)</span> represents the motion variable; <span class="math inline">\(m_{j}\)</span> is the mass; <span class="math inline">\(b_{j}\)</span> is the viscous friction constant; and <span class="math inline">\(j = 0,1,2\)</span> stands for cart and first and second pendulum, respectively. <span class="math inline">\(I_{0}\)</span> is the inertia of the pulley, and <span class="math inline">\(l_{1,2}\)</span> are the lengths of the pendulums.</p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b9">
+p. 3
 </button>
 </div>
-<div id="p3-b9-scope-margin-end-22" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b9-scope-margin-end-19">
 </div>
-<div id="p3-b10-scope" class="margin-scope" data-margin-end="p3-b10-scope-margin-end-23">
-
+<div class="margin-scope" data-margin-end="p3-b10-scope-margin-end-20" id="p3-b10-scope">
 </div>
-<div id="p3-b10" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b10">
 <p>The only input to the system is the moment μ on the motor shaft. However, for better understanding, the equations were derived for the force on the carriage F. There is a simple relationship of direct proportionality between these two quantities:</p>
-<button class="source-button" data-block="p3-b10" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b10">
+p. 3
 </button>
 </div>
-<div id="p3-b10-scope-margin-end-23" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b10-scope-margin-end-20">
 </div>
-<div id="p3-b11" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_12.jpg">
-<p><span class="math display">\[
-\mu = F R _ {0},\tag{9}
-\]</span></p>
-<button class="source-button" data-block="p3-b11" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_12.jpg" data-source-page="3" id="p3-b11">
+<p><span id="eq-9"><span class="math display">\[
+\mu = F R _ {0},
+\tag{9}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b11">
+p. 3
 </button>
 </div>
-<div id="p3-b12-scope" class="margin-scope" data-margin-end="p3-b12-scope-margin-end-24">
-
+<div class="margin-scope" data-margin-end="p3-b12-scope-margin-end-21" id="p3-b12-scope">
 </div>
-<div id="p3-b12" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b12">
 <p>where <span class="math inline">\(R_{0}\)</span> is the radius of the pulley. Then the external force output is given by</p>
-<button class="source-button" data-block="p3-b12" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b12">
+p. 3
 </button>
 </div>
-<div id="p3-b12-scope-margin-end-24" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b12-scope-margin-end-21">
 </div>
-<div id="p3-b13" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_14.jpg">
-<p><span class="math display">\[
-\boldsymbol {P} _ {\mathrm{e}} = F \dot {\theta} _ {0}.\tag{10}
-\]</span></p>
-<button class="source-button" data-block="p3-b13" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_14.jpg" data-source-page="3" id="p3-b13">
+<p><span id="eq-10"><span class="math display">\[
+\boldsymbol {P} _ {\mathrm{e}} = F \dot {\theta} _ {0}.
+\tag{10}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b13">
+p. 3
 </button>
 </div>
-<div id="p3-b14-scope" class="margin-scope" data-margin-end="p3-b14-scope-margin-end-25">
-
+<div class="margin-scope" data-margin-end="p3-b14-scope-margin-end-22" id="p3-b14-scope">
 </div>
-<div id="p3-b14" class="paper-block" data-source-page="3">
-<p>Substituting the above equations into Eq. (2) gives the resulting equation of motion, which can be written in standard matrix form:</p>
-<button class="source-button" data-block="p3-b14" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block prose-block" data-source-page="3" id="p3-b14">
+<p>Substituting the above equations into Eq. (<a class="quarto-xref" href="#eq-2">2</a>) gives the resulting equation of motion, which can be written in standard matrix form:</p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b14">
+p. 3
 </button>
 </div>
-<div id="p3-b14-scope-margin-end-25" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b14-scope-margin-end-22">
 </div>
-<div id="p3-b15" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_16.jpg">
-<p><span class="math display">\[
-\mathbf {M} (\boldsymbol {q}) \ddot {\boldsymbol {q}} + \mathbf {B} (\boldsymbol {q}, \dot {\boldsymbol {q}}) \dot {\boldsymbol {q}} + \mathbf {K} (\boldsymbol {q}) = \boldsymbol {H} _ {u},\tag{11}
-\]</span></p>
-<button class="source-button" data-block="p3-b15" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_16.jpg" data-source-page="3" id="p3-b15">
+<p><span id="eq-11"><span class="math display">\[
+\mathbf {M} (\boldsymbol {q}) \ddot {\boldsymbol {q}} + \mathbf {B} (\boldsymbol {q}, \dot {\boldsymbol {q}}) \dot {\boldsymbol {q}} + \mathbf {K} (\boldsymbol {q}) = \boldsymbol {H} _ {u},
+\tag{11}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b15">
+p. 3
 </button>
 </div>
-<div id="p3-b16-scope" class="margin-scope" data-margin-end="p3-b16-scope-margin-end-26">
-
+<div class="margin-scope" data-margin-end="p3-b16-scope-margin-end-23" id="p3-b16-scope">
 </div>
-<div id="p3-b16" class="paper-block" data-source-page="3">
-<p>where the vector <span class="math inline">\(\pmb{q} = [\theta_0,\theta_1,\theta_2]\)</span> ; the introduction of matrices is not listed here for the sake of abbreviation. The equation of motion in the form of Eq. (5) can be expressed as follows:</p>
-<button class="source-button" data-block="p3-b16" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block prose-block" data-source-page="3" id="p3-b16">
+<p>where the vector <span class="math inline">\(\pmb{q} = [\theta_0,\theta_1,\theta_2]\)</span> ; the introduction of matrices is not listed here for the sake of abbreviation. The equation of motion in the form of Eq. (<a class="quarto-xref" href="#eq-5">5</a>) can be expressed as follows:</p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b16">
+p. 3
 </button>
 </div>
-<div id="p3-b16-scope-margin-end-26" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b16-scope-margin-end-23">
 </div>
-<div id="p3-b17" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_18.jpg">
-<p><span class="math display">\[
-\begin{array}{c} \dot {\boldsymbol {\theta}} = \left[ \begin{array}{c c} \mathbf {0} &amp; \mathbf {I} \\ \mathbf {0} &amp; - \mathbf {M} ^ {- 1} \mathbf {B} \end{array} \right] \boldsymbol {\theta} + \left[ \begin{array}{c} \mathbf {0} \\ - \mathbf {M} ^ {- 1} \mathbf {K} \end{array} \right] \\ + \left[ \begin{array}{c} 0 \\ \mathbf {M} ^ {- 1} \mathbf {H} \end{array} \right] u, \end{array}\tag{12}
-\]</span></p>
-<button class="source-button" data-block="p3-b17" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_18.jpg" data-source-page="3" id="p3-b17">
+<p><span id="eq-12"><span class="math display">\[
+\begin{array}{c} \dot {\boldsymbol {\theta}} = \left[ \begin{array}{c c} \mathbf {0} &amp; \mathbf {I} \\ \mathbf {0} &amp; - \mathbf {M} ^ {- 1} \mathbf {B} \end{array} \right] \boldsymbol {\theta} + \left[ \begin{array}{c} \mathbf {0} \\ - \mathbf {M} ^ {- 1} \mathbf {K} \end{array} \right] \\ + \left[ \begin{array}{c} 0 \\ \mathbf {M} ^ {- 1} \mathbf {H} \end{array} \right] u, \end{array}
+\tag{12}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b17">
+p. 3
 </button>
 </div>
-<div id="p3-b18-scope" class="margin-scope" data-margin-end="p3-b18-scope-margin-end-27">
-
+<div class="margin-scope" data-margin-end="p3-b18-scope-margin-end-24" id="p3-b18-scope">
 </div>
-<div id="p3-b18" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b18">
 <p>where 0 represents the zero matrix, and I represents the unit matrix of the corresponding dimensions.</p>
-<button class="source-button" data-block="p3-b18" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b18">
+p. 3
 </button>
 </div>
-<div id="p3-b18-scope-margin-end-27" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b18-scope-margin-end-24">
 </div>
-<div id="p3-b19-scope" class="margin-scope" data-margin-end="p3-b19-scope-margin-end-28">
-
+<div class="margin-scope" data-margin-end="p3-b19-scope-margin-end-25" id="p3-b19-scope">
 </div>
-<div id="p3-b19" class="paper-block" data-source-page="3">
-<p>To design a linear controller, the non-linear equation of motion must first be linearized. It is common to approximate around the nominal operating point <span class="math inline">\((\theta_{n},u_{n})\)</span> by the first terms of the Taylor series (Franklin et al., 2002). The resulting equation of motion represented by appropriate state vector and state space matrices is as follow:</p>
-<button class="source-button" data-block="p3-b19" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block prose-block" data-source-page="3" id="p3-b19">
+<p>To design a linear controller, the non-linear equation of motion must first be linearized. It is common to approximate around the nominal operating point <span class="math inline">\((\theta_{n},u_{n})\)</span> by the first terms of the Taylor series <span class="citation" data-cites="paper-ref-3">(<a href="#ref-paper-ref-3" role="doc-biblioref">Franklin et al., 2002</a>)</span>. The resulting equation of motion represented by appropriate state vector and state space matrices is as follow:</p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b19">
+p. 3
 </button>
 </div>
-<div id="p3-b19-scope-margin-end-28" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b19-scope-margin-end-25">
 </div>
-<div id="p3-b20" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_21.jpg">
-<p><span class="math display">\[
-\boldsymbol {\Delta} \dot {\boldsymbol {\theta}} (t) = \mathbf {A} \Delta \boldsymbol {\theta} (t) + \mathbf {B} \Delta u (t).\tag{13}
-\]</span></p>
-<button class="source-button" data-block="p3-b20" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_21.jpg" data-source-page="3" id="p3-b20">
+<p><span id="eq-13"><span class="math display">\[
+\boldsymbol {\Delta} \dot {\boldsymbol {\theta}} (t) = \mathbf {A} \Delta \boldsymbol {\theta} (t) + \mathbf {B} \Delta u (t).
+\tag{13}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b20">
+p. 3
 </button>
 </div>
-<div id="p3-b21" class="paper-block" data-source-page="3">
-<section id="stabilization-control-of-the-system" class="level2">
-<h2 class="anchored" data-anchor-id="stabilization-control-of-the-system">3 Stabilization control of the system</h2>
-<button class="source-button" data-block="p3-b21" aria-label="View source, page 3">
-p.&nbsp;3
-</button>
 </section>
+<section class="level2" id="sec-p3-b21">
+<h2 class="anchored" data-anchor-id="sec-p3-b21">3 Stabilization control of the system</h2>
+<div class="margin-scope" data-margin-end="p3-b22-scope-margin-end-26" id="p3-b22-scope">
 </div>
-<div id="p3-b22-scope" class="margin-scope" data-margin-end="p3-b22-scope-margin-end-29">
-
-</div>
-<div id="p3-b22" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b22">
 <p>In this section, attention is paid to the possibilities of stabilizing the double-inverted pendulum. The LQR and feedback linearization as the theoretical basis for the following system of the swing-up search have achieved detailed description.</p>
-<button class="source-button" data-block="p3-b22" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b22">
+p. 3
 </button>
 </div>
-<div id="p3-b22-scope-margin-end-29" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b22-scope-margin-end-26">
 </div>
-<div id="p3-b23" class="paper-block" data-source-page="3">
-<section id="linear-quadratic-regulator-lqr" class="level2">
-<h2 class="anchored" data-anchor-id="linear-quadratic-regulator-lqr">3.1 Linear quadratic regulator (LQR)</h2>
-<button class="source-button" data-block="p3-b23" aria-label="View source, page 3">
-p.&nbsp;3
-</button>
-</section>
+<section class="level3" id="sec-p3-b23">
+<h3 class="anchored" data-anchor-id="sec-p3-b23">3.1 Linear quadratic regulator (LQR)</h3>
+<div class="margin-scope" data-margin-end="p3-b24-scope-margin-end-27" id="p3-b24-scope">
 </div>
-<div id="p3-b24-scope" class="margin-scope" data-margin-end="p3-b24-scope-margin-end-30">
-
-</div>
-<div id="p3-b24" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b24">
 <p>The objective of this method is to design the optimal control of a linear system given the magnitude of the active intervention u and the deviation of the states x from the zero (desired) value in time. Practically, the objective is to minimize the cost function J , which is given by</p>
-<button class="source-button" data-block="p3-b24" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b24">
+p. 3
 </button>
 </div>
-<div id="p3-b24-scope-margin-end-30" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b24-scope-margin-end-27">
 </div>
-<div id="p3-b25" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_26.jpg">
-<p><span class="math display">\[
-J = \int_ {0} ^ {T} \left(\boldsymbol {x} ^ {T} (t) \mathbf {Q} _ {\mathrm{c}} \boldsymbol {x} (t) + u ^ {T} (t) \mathbf {R} _ {\mathrm{c}} u (t)\right) \mathrm{d} t.\tag{14}
-\]</span></p>
-<button class="source-button" data-block="p3-b25" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_26.jpg" data-source-page="3" id="p3-b25">
+<p><span id="eq-14"><span class="math display">\[
+J = \int_ {0} ^ {T} \left(\boldsymbol {x} ^ {T} (t) \mathbf {Q} _ {\mathrm{c}} \boldsymbol {x} (t) + u ^ {T} (t) \mathbf {R} _ {\mathrm{c}} u (t)\right) \mathrm{d} t.
+\tag{14}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b25">
+p. 3
 </button>
 </div>
-<div id="p3-b26-scope" class="margin-scope" data-margin-end="p3-b26-scope-margin-end-31">
-
+<div class="margin-scope" data-margin-end="p3-b26-scope-margin-end-28" id="p3-b26-scope">
 </div>
-<div id="p3-b26" class="paper-block" data-source-page="3">
+<div class="paper-block prose-block" data-source-page="3" id="p3-b26">
 <p>For the state feedback law, we have the following:</p>
-<button class="source-button" data-block="p3-b26" aria-label="View source, page 3">
-p.&nbsp;3
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b26">
+p. 3
 </button>
 </div>
-<div id="p3-b26-scope-margin-end-31" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b26-scope-margin-end-28">
 </div>
-<div id="p3-b27" class="paper-block" data-source-page="3" data-equation-image="images/page_2_equation_28.jpg">
-<p><span class="math display">\[
-u (t) = - K _ {\mathrm{c}} \boldsymbol {x} (t).\tag{15}
-\]</span></p>
-<button class="source-button" data-block="p3-b27" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block" data-equation-image="images/page_2_equation_28.jpg" data-source-page="3" id="p3-b27">
+<p><span id="eq-15"><span class="math display">\[
+u (t) = - K _ {\mathrm{c}} \boldsymbol {x} (t).
+\tag{15}\]</span></span></p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b27">
+p. 3
 </button>
 </div>
-<div id="p3-b28-scope" class="margin-scope" data-margin-end="p3-b28-scope-margin-end-32">
-
+<div class="margin-scope" data-margin-end="p3-b28-scope-margin-end-29" id="p3-b28-scope">
 </div>
-<div id="p3-b28" class="paper-block" data-source-page="3">
-<p>For discrete systems, the integral in Eq. (6) is replaced by the summation. The matrices <span class="math inline">\(Q_{c}\)</span> and <span class="math inline">\(R_{c}\)</span> correspond to the weights of the states and inputs, respectively (Franklin et al., 2002). <span class="math inline">\(\boldsymbol{K}_{\mathrm{c}}\)</span> is the control matrix that can be subsequently used for stabilization and is given by the solution of the associated Riccati equation. LQR is a widely used method, and there is a wealth of documentation on it. Implementation-wise, the simplest modification of LQR for non-linear systems is the state-dependent Riccati equation (SDRE). The principle of the method is to linearize the model around the current state for each time instant and then compute the optimal control matrix. However, this method places greater demands on computational power.</p>
-<button class="source-button" data-block="p3-b28" aria-label="View source, page 3">
-p.&nbsp;3
+<div class="paper-block prose-block" data-source-page="3" id="p3-b28">
+<p>For discrete systems, the integral in Eq. (<a class="quarto-xref" href="#eq-6">6</a>) is replaced by the summation. The matrices <span class="math inline">\(Q_{c}\)</span> and <span class="math inline">\(R_{c}\)</span> correspond to the weights of the states and inputs, respectively <span class="citation" data-cites="paper-ref-3">(<a href="#ref-paper-ref-3" role="doc-biblioref">Franklin et al., 2002</a>)</span>. <span class="math inline">\(\boldsymbol{K}_{\mathrm{c}}\)</span> is the control matrix that can be subsequently used for stabilization and is given by the solution of the associated Riccati equation. LQR is a widely used method, and there is a wealth of documentation on it. Implementation-wise, the simplest modification of LQR for non-linear systems is the state-dependent Riccati equation (SDRE). The principle of the method is to linearize the model around the current state for each time instant and then compute the optimal control matrix. However, this method places greater demands on computational power.</p>
+<button aria-label="View source, page 3" class="source-button" data-block="p3-b28">
+p. 3
 </button>
 </div>
-<div id="p3-b28-scope-margin-end-32" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p3-b28-scope-margin-end-29">
 </div>
-<div id="p4-b3" class="paper-block" data-source-page="4">
-<section id="feedback-linearization-fbl" class="level2">
-<h2 class="anchored" data-anchor-id="feedback-linearization-fbl">3.2 Feedback linearization (FBL)</h2>
-<button class="source-button" data-block="p4-b3" aria-label="View source, page 4">
-p.&nbsp;4
-</button>
 </section>
+<section class="level3" id="sec-p4-b3">
+<h3 class="anchored" data-anchor-id="sec-p4-b3">3.2 Feedback linearization (FBL)</h3>
+<div class="margin-scope" data-margin-end="p4-b4-scope-margin-end-30" id="p4-b4-scope">
 </div>
-<div id="p4-b4-scope" class="margin-scope" data-margin-end="p4-b4-scope-margin-end-33">
-
-</div>
-<div id="p4-b4" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b4">
 <p>In contrast to the usual linear function approximation, the method used does not neglect the non-linear terms and works even outside the vicinity of the working point. There are two principles utilized in combination in this work’s input state and input–output linearization.</p>
-<button class="source-button" data-block="p4-b4" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b4">
+p. 4
 </button>
 </div>
-<div id="p4-b4-scope-margin-end-33" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b4-scope-margin-end-30">
 </div>
-<div id="p4-b5-scope" class="margin-scope" data-margin-end="p4-b5-scope-margin-end-34">
-
+<div class="margin-scope" data-margin-end="p4-b5-scope-margin-end-31" id="p4-b5-scope">
 </div>
-<div id="p4-b5" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b5">
 <p>The necessary algebraic operations are generally not trivial. For the sake of scope, the system is restricted to the single input, single output (SISO) described by the following:</p>
-<button class="source-button" data-block="p4-b5" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b5">
+p. 4
 </button>
 </div>
-<div id="p4-b5-scope-margin-end-34" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b5-scope-margin-end-31">
 </div>
-<div id="p4-b6" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_6.jpg">
-<p><span class="math display">\[
-\dot {\boldsymbol {x}} = \left[ \begin{array}{c} \dot {x} _ {1} \\ \ddots \\ \dot {x} _ {n - 1} \\ \dot {x} _ {n} \end{array} \right] = \left[ \begin{array}{c} x _ {2} \\ \ddots \\ x _ {n} \\ f (\boldsymbol {x}) + g (\boldsymbol {x}) u \end{array} \right].\tag{16}
-\]</span></p>
-<button class="source-button" data-block="p4-b6" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_6.jpg" data-source-page="4" id="p4-b6">
+<p><span id="eq-16"><span class="math display">\[
+\dot {\boldsymbol {x}} = \left[ \begin{array}{c} \dot {x} _ {1} \\ \ddots \\ \dot {x} _ {n - 1} \\ \dot {x} _ {n} \end{array} \right] = \left[ \begin{array}{c} x _ {2} \\ \ddots \\ x _ {n} \\ f (\boldsymbol {x}) + g (\boldsymbol {x}) u \end{array} \right].
+\tag{16}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b6">
+p. 4
 </button>
 </div>
-<div id="p4-b7-scope" class="margin-scope" data-margin-end="p4-b7-scope-margin-end-35">
-
+<div class="margin-scope" data-margin-end="p4-b7-scope-margin-end-32" id="p4-b7-scope">
 </div>
-<div id="p4-b7" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b7">
 <p>The input state linearization consists of finding a suitable transformation of the states T and input u such that</p>
-<button class="source-button" data-block="p4-b7" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b7">
+p. 4
 </button>
 </div>
-<div id="p4-b7-scope-margin-end-35" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b7-scope-margin-end-32">
 </div>
-<div id="p4-b8" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_8.jpg">
-<p><span class="math display">\[
-\boldsymbol {z} = \boldsymbol {T} (\boldsymbol {x}), u = u (\boldsymbol {x}, v).\tag{17}
-\]</span></p>
-<button class="source-button" data-block="p4-b8" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_8.jpg" data-source-page="4" id="p4-b8">
+<p><span id="eq-17"><span class="math display">\[
+\boldsymbol {z} = \boldsymbol {T} (\boldsymbol {x}), u = u (\boldsymbol {x}, v).
+\tag{17}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b8">
+p. 4
 </button>
 </div>
-<div id="p4-b9-scope" class="margin-scope" data-margin-end="p4-b9-scope-margin-end-36">
-
+<div class="margin-scope" data-margin-end="p4-b9-scope-margin-end-33" id="p4-b9-scope">
 </div>
-<div id="p4-b9" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b9">
 <p>The role of regulation is transferred to system control:</p>
-<button class="source-button" data-block="p4-b9" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b9">
+p. 4
 </button>
 </div>
-<div id="p4-b9-scope-margin-end-36" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b9-scope-margin-end-33">
 </div>
-<div id="p4-b10" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_10.jpg">
-<p><span class="math display">\[
-\dot {z} = \mathbf {A _ {c}} x + \mathbf {B _ {c}} v.\tag{18}
-\]</span></p>
-<button class="source-button" data-block="p4-b10" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_10.jpg" data-source-page="4" id="p4-b10">
+<p><span id="eq-18"><span class="math display">\[
+\dot {z} = \mathbf {A _ {c}} x + \mathbf {B _ {c}} v.
+\tag{18}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b10">
+p. 4
 </button>
 </div>
-<div id="p4-b11-scope" class="margin-scope" data-margin-end="p4-b11-scope-margin-end-37">
-
+<div class="margin-scope" data-margin-end="p4-b11-scope-margin-end-34" id="p4-b11-scope">
 </div>
-<div id="p4-b11" class="paper-block" data-source-page="4">
-<p>The linearization conditions, detailed description, and examples are exhaustively explained in Hedrick and Girard (2010) and Graichen et al.&nbsp;(2007).</p>
-<button class="source-button" data-block="p4-b11" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block prose-block" data-source-page="4" id="p4-b11">
+<p>The linearization conditions, detailed description, and examples are exhaustively explained in <span class="citation" data-cites="paper-ref-5">Hedrick and Girard (<a href="#ref-paper-ref-5" role="doc-biblioref">2010</a>)</span> and <span class="citation" data-cites="paper-ref-4">Graichen et al. (<a href="#ref-paper-ref-4" role="doc-biblioref">2007</a>)</span>.</p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b11">
+p. 4
 </button>
 </div>
-<div id="p4-b11-scope-margin-end-37" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b11-scope-margin-end-34">
 </div>
-<div id="p4-b12-scope" class="margin-scope" data-margin-end="p4-b12-scope-margin-end-38">
-
+<div class="margin-scope" data-margin-end="p4-b12-scope-margin-end-35" id="p4-b12-scope">
 </div>
-<div id="p4-b12" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b12">
 <p>We assume that the outputs of the considered system y are given by the following function:</p>
-<button class="source-button" data-block="p4-b12" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b12">
+p. 4
 </button>
 </div>
-<div id="p4-b12-scope-margin-end-38" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b12-scope-margin-end-35">
 </div>
-<div id="p4-b13" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_13.jpg">
-<p><span class="math display">\[
-y = h (x).\tag{19}
-\]</span></p>
-<button class="source-button" data-block="p4-b13" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_13.jpg" data-source-page="4" id="p4-b13">
+<p><span id="eq-19"><span class="math display">\[
+y = h (x).
+\tag{19}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b13">
+p. 4
 </button>
 </div>
-<div id="p4-b14-scope" class="margin-scope" data-margin-end="p4-b14-scope-margin-end-39">
-
+<div class="margin-scope" data-margin-end="p4-b14-scope-margin-end-36" id="p4-b14-scope">
 </div>
-<div id="p4-b14" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b14">
 <p>The principle of the input–output linearization is to find the direct dependence of the outputs on the input by successively deriving the function h with regard to time until the following dependence appears:</p>
-<button class="source-button" data-block="p4-b14" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b14">
+p. 4
 </button>
 </div>
-<div id="p4-b14-scope-margin-end-39" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b14-scope-margin-end-36">
 </div>
-<div id="p4-b15" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_15.jpg">
-<p><span class="math display">\[
-\begin{array}{c} \mathbf {y} ^ {(1)} = \frac {\partial \boldsymbol {h}}{\partial \boldsymbol {x}} \frac {\mathrm{d} x}{\mathrm{d} t} = \frac {\partial \boldsymbol {h}}{\partial x} \big [ f (\boldsymbol {x}) + g (\boldsymbol {x}) u \big ] = L _ {\mathrm{f}} (h) \\ + L _ {\mathrm{g}} (\boldsymbol {h}) u, \mathbf {y} ^ {(2)} = L _ {\mathrm{f}} ^ {2} (\boldsymbol {h}) + L _ {\mathrm{g}} (L _ {\mathrm{f}} (\boldsymbol {h})) u, \end{array}\tag{20}
-\]</span></p>
-<button class="source-button" data-block="p4-b15" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_15.jpg" data-source-page="4" id="p4-b15">
+<p><span id="eq-20"><span class="math display">\[
+\begin{array}{c} \mathbf {y} ^ {(1)} = \frac {\partial \boldsymbol {h}}{\partial \boldsymbol {x}} \frac {\mathrm{d} x}{\mathrm{d} t} = \frac {\partial \boldsymbol {h}}{\partial x} \big [ f (\boldsymbol {x}) + g (\boldsymbol {x}) u \big ] = L _ {\mathrm{f}} (h) \\ + L _ {\mathrm{g}} (\boldsymbol {h}) u, \mathbf {y} ^ {(2)} = L _ {\mathrm{f}} ^ {2} (\boldsymbol {h}) + L _ {\mathrm{g}} (L _ {\mathrm{f}} (\boldsymbol {h})) u, \end{array}
+\tag{20}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b15">
+p. 4
 </button>
 </div>
-<div id="p4-b16-scope" class="margin-scope" data-margin-end="p4-b16-scope-margin-end-40">
-
+<div class="margin-scope" data-margin-end="p4-b16-scope-margin-end-37" id="p4-b16-scope">
 </div>
-<div id="p4-b16" class="paper-block" data-source-page="4">
-<p>and so on until, for the kth derivative, the input term is non-zero (Aguiar, 2011). The prescription of the new input u is given by</p>
-<button class="source-button" data-block="p4-b16" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block prose-block" data-source-page="4" id="p4-b16">
+<p>and so on until, for the kth derivative, the input term is non-zero <span class="citation" data-cites="paper-ref-1">(<a href="#ref-paper-ref-1" role="doc-biblioref">Aguiar, 2011</a>)</span>. The prescription of the new input u is given by</p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b16">
+p. 4
 </button>
 </div>
-<div id="p4-b16-scope-margin-end-40" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b16-scope-margin-end-37">
 </div>
-<div id="p4-b17" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_17.jpg">
-<p><span class="math display">\[
-u = \frac {1}{L _ {\mathrm{g}} \left(L _ {\mathrm{f}} ^ {k - 1} (\boldsymbol {h})\right)} \left(- L _ {\mathrm{f}} ^ {k} (\boldsymbol {h}) + v\right),\tag{21}
-\]</span></p>
-<button class="source-button" data-block="p4-b17" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_17.jpg" data-source-page="4" id="p4-b17">
+<p><span id="eq-21"><span class="math display">\[
+u = \frac {1}{L _ {\mathrm{g}} \left(L _ {\mathrm{f}} ^ {k - 1} (\boldsymbol {h})\right)} \left(- L _ {\mathrm{f}} ^ {k} (\boldsymbol {h}) + v\right),
+\tag{21}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b17">
+p. 4
 </button>
 </div>
-<div id="p4-b18-scope" class="margin-scope" data-margin-end="p4-b18-scope-margin-end-41">
-
+<div class="margin-scope" data-margin-end="p4-b18-scope-margin-end-38" id="p4-b18-scope">
 </div>
-<div id="p4-b18" class="paper-block" data-source-page="4">
+<div class="paper-block prose-block" data-source-page="4" id="p4-b18">
 <p>where v is equal to <span class="math inline">\(y(k)\)</span> . The transformed systems prescribed by Eqs. (22, 23) are already completely linear – they can therefore be controlled by the linear method (LQR, array placement).</p>
-<button class="source-button" data-block="p4-b18" aria-label="View source, page 4">
-p.&nbsp;4
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b18">
+p. 4
 </button>
 </div>
-<div id="p4-b18-scope-margin-end-41" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b18-scope-margin-end-38">
 </div>
-<div id="p4-b19" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_19.jpg">
-<p><span class="math display">\[
-\dot {\boldsymbol {z}} = \left( \begin{array}{c} y ^ {(1)} \\ \ddots \\ y ^ {(k - 1)} \\ y ^ {(k)} \end{array} \right) = \mathbf {A} _ {\mathrm{c}} \boldsymbol {z} + \mathbf {B} _ {\mathrm{c}} v\tag{22}
-\]</span></p>
-<button class="source-button" data-block="p4-b19" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_19.jpg" data-source-page="4" id="p4-b19">
+<p><span id="eq-22"><span class="math display">\[
+\dot {\boldsymbol {z}} = \left( \begin{array}{c} y ^ {(1)} \\ \ddots \\ y ^ {(k - 1)} \\ y ^ {(k)} \end{array} \right) = \mathbf {A} _ {\mathrm{c}} \boldsymbol {z} + \mathbf {B} _ {\mathrm{c}} v
+\tag{22}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b19">
+p. 4
 </button>
 </div>
-<div id="p4-b20" class="paper-block margin-item" data-source-page="4" data-margin-for="p4-b22-scope">
-<p><img src="images/page_3_image_20.jpg" class="img-fluid"></p>
-<p>Figure 3. Block diagram of regulation with input–output feedback linearization.</p>
-<button class="source-button" data-block="p4-b20" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block" data-equation-image="images/page_3_equation_22.jpg" data-source-page="4" id="p4-b21">
+<p><span id="eq-23"><span class="math display">\[
+\begin{array}{l} \mathbf {A} _ {\mathrm{c}} = \left[ \begin{array}{c c c c c c} 0 &amp; 1 &amp; 0 &amp; \ddots &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; \ddots \\ \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots \\ 0 &amp; 0 &amp; \ddots &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; \ddots &amp; 0 &amp; 0 \end{array} \right], \mathbf {B} _ {\mathrm{c}} = \left[ \begin{array}{c} 0 \\ 0 \\ \ddots \\ 0 \\ 1 \end{array} \right], \\ v = - K _ {\mathrm{c}} z \end{array}
+\tag{23}\]</span></span></p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b21">
+p. 4
 </button>
 </div>
-<div id="p4-b21" class="paper-block" data-source-page="4" data-equation-image="images/page_3_equation_22.jpg">
-<p><span class="math display">\[
-\begin{array}{l} \mathbf {A} _ {\mathrm{c}} = \left[ \begin{array}{c c c c c c} 0 &amp; 1 &amp; 0 &amp; \ddots &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; 0 &amp; \ddots \\ \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots \\ 0 &amp; 0 &amp; \ddots &amp; 0 &amp; 1 \\ 0 &amp; 0 &amp; \ddots &amp; 0 &amp; 0 \end{array} \right], \mathbf {B} _ {\mathrm{c}} = \left[ \begin{array}{c} 0 \\ 0 \\ \ddots \\ 0 \\ 1 \end{array} \right], \\ v = - K _ {\mathrm{c}} z \end{array}\tag{23}
-\]</span></p>
-<button class="source-button" data-block="p4-b21" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="margin-scope" data-margin-end="p4-b22-scope-margin-end-39" id="p4-b22-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="4" id="p4-b22">
+<p>A schematic of the closed-loop control is shown in Fig. <a class="quarto-xref" href="#fig-3">3</a>. For systems with n inputs and m outputs (MIMO), where <span class="math inline">\(n = m\)</span> the procedure is more complicated (we refer to static input– output decoupling), but the basic principles remain the same <span class="citation" data-cites="paper-ref-5 paper-ref-7">(<a href="#ref-paper-ref-5" role="doc-biblioref">Hedrick and Girard, 2010</a>; <a href="#ref-paper-ref-7" role="doc-biblioref">Henson and Seborg, 1997</a>)</span> and lead to time-invariant feedback control.</p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b22">
+p. 4
 </button>
 </div>
-<div id="p4-b22-scope" class="margin-scope" data-margin-end="p4-b22-scope-margin-end-42">
-
+<div class="margin-scope-end" id="p4-b22-scope-margin-end-39">
 </div>
-<div id="p4-b22" class="paper-block" data-source-page="4">
-<p>A schematic of the closed-loop control is shown in Fig. 3. For systems with n inputs and m outputs (MIMO), where <span class="math inline">\(n = m\)</span> the procedure is more complicated (we refer to static input– output decoupling), but the basic principles remain the same (Hedrick and Girard, 2010; Henson and Seborg, 1997) and lead to time-invariant feedback control.</p>
-<button class="source-button" data-block="p4-b22" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block margin-item" data-margin-for="p4-b22-scope" data-source-page="4" id="p4-b20">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-3">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_3_image_20.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 3: Block diagram of regulation with input–output feedback linearization.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b20">
+p. 4
 </button>
 </div>
-<div id="p4-b22-scope-margin-end-42" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p4-b23-scope-margin-end-40" id="p4-b23-scope">
 </div>
-<div id="p4-b23-scope" class="margin-scope" data-margin-end="p4-b23-scope-margin-end-43">
-
-</div>
-<div id="p4-b23" class="paper-block" data-source-page="4">
-<p>Also, A Kalman filter, which is a very useful tool that extracts the best possible estimate of all the states of the system (even if not all of them are measured) from imperfect knowledge of the model and inaccurate measurements (Nise, 2020), is used in this work. This is a stochastic observer – it assumes that the quantities are random with a Gaussian distribution and works with their mean and variance (uncertainty). Tuning of the algorithm consists of an appropriate choice of the matrices <span class="math inline">\(\mathbf{Q}_{0}\)</span> and <span class="math inline">\(\left|R_{0}\right|\)</span> which introduce the co-variance of process and measurement noise into the calculation. At each stage, the state estimation and covariance matrix <span class="math inline">\(\left|\mathbf{P}_{0}\right|\)</span> are adjusted, which carries information about the uncertainty of the states and their correlation with each other.</p>
-<button class="source-button" data-block="p4-b23" aria-label="View source, page 4">
-p.&nbsp;4
+<div class="paper-block prose-block" data-source-page="4" id="p4-b23">
+<p>Also, A Kalman filter, which is a very useful tool that extracts the best possible estimate of all the states of the system (even if not all of them are measured) from imperfect knowledge of the model and inaccurate measurements <span class="citation" data-cites="paper-ref-11">(<a href="#ref-paper-ref-11" role="doc-biblioref">Nise, 2020</a>)</span>, is used in this work. This is a stochastic observer – it assumes that the quantities are random with a Gaussian distribution and works with their mean and variance (uncertainty). Tuning of the algorithm consists of an appropriate choice of the matrices <span class="math inline">\(\mathbf{Q}_{0}\)</span> and <span class="math inline">\(\left|R_{0}\right|\)</span> which introduce the co-variance of process and measurement noise into the calculation. At each stage, the state estimation and covariance matrix <span class="math inline">\(\left|\mathbf{P}_{0}\right|\)</span> are adjusted, which carries information about the uncertainty of the states and their correlation with each other.</p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b23">
+p. 4
 </button>
 </div>
-<div id="p4-b23-scope-margin-end-43" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p4-b23-scope-margin-end-40">
 </div>
-<div id="p4-b24" class="paper-block" data-source-page="4">
-<section id="swing-up-control" class="level2">
-<h2 class="anchored" data-anchor-id="swing-up-control">4 Swing-up control</h2>
-<button class="source-button" data-block="p4-b24" aria-label="View source, page 4">
-p.&nbsp;4
-</button>
 </section>
-</div>
-<div id="p4-b25-scope" class="margin-scope" data-margin-end="p4-b25-scope-margin-end-44">
-
-</div>
-<div id="p4-b25" class="paper-block" data-source-page="4">
-<p>The key to planning a swing-up is finding a suitable trajectory for the carriage and pendulums so that the positions and velocities of the carriage and pendulums are zero when the swing-up is complete. However, whatever the method of obtaining the swing-up trajectory (or the necessary input for swing-up), in terms of structure, it is possible to divide the control into forward or backward. Feedforward control can only be used if the behavior of the double-inverted pendulum is well known. A previously calculated input is applied to the system, and a certain output is expected. However, the double-inverse pendulum is extremely sensitive to initial</p>
-<button class="source-button" data-block="p4-b25" aria-label="View source, page 4">
-p.&nbsp;4
-</button>
-</div>
-<div id="p4-b25-scope-margin-end-44" class="margin-scope-end">
-
-</div>
-<div id="p5-b2" class="paper-block margin-item" data-source-page="5" data-margin-for="p5-b3-scope">
-<p><img src="images/page_4_image_2.jpg" class="img-fluid"></p>
-<p>Figure 4. Block diagram of feedforward and feedback control for swing-up.</p>
-<button class="source-button" data-block="p5-b2" aria-label="View source, page 5">
-p.&nbsp;5
-</button>
-</div>
-<div id="p5-b3-scope" class="margin-scope" data-margin-end="p5-b3-scope-margin-end-45">
-
-</div>
-<div id="p5-b3" class="paper-block" data-source-page="5">
-<p>conditions. Even a small deviation from the calculated trajectory can cause a failed swing-up. A possible solution is to add feedback control. If we denote by <span class="math inline">\(u_{f}\)</span> the input given by as the forward control and that given by <span class="math inline">\(u_{b}\)</span> as the backward control, then the resultant is given by their sum (Fig. 4).</p>
-<button class="source-button" data-block="p5-b3" aria-label="View source, page 5">
-p.&nbsp;5
-</button>
-</div>
-<div id="p5-b3-scope-margin-end-45" class="margin-scope-end">
-
-</div>
-<div id="p5-b4" class="paper-block" data-source-page="5">
-<section id="boundary-value-problem-bvp-with-free-parameters" class="level2">
-<h2 class="anchored" data-anchor-id="boundary-value-problem-bvp-with-free-parameters">4.1 Boundary value problem (BVP) with free parameters</h2>
-<button class="source-button" data-block="p5-b4" aria-label="View source, page 5">
-p.&nbsp;5
-</button>
 </section>
+<section class="level2" id="sec-p4-b24">
+<h2 class="anchored" data-anchor-id="sec-p4-b24">4 Swing-up control</h2>
+<div class="margin-scope" data-margin-end="p4-b25-scope-margin-end-41" id="p4-b25-scope">
 </div>
-<div id="p5-b5-scope" class="margin-scope" data-margin-end="p5-b5-scope-margin-end-46">
-
+<div class="paper-block prose-block" data-source-page="4" id="p4-b25">
+<p>The key to planning a swing-up is finding a suitable trajectory for the carriage and pendulums so that the positions and velocities of the carriage and pendulums are zero when the swing-up is complete. However, whatever the method of obtaining the swing-up trajectory (or the necessary input for swing-up), in terms of structure, it is possible to divide the control into forward or backward. Feedforward control can only be used if the behavior of the double-inverted pendulum is well known. A previously calculated input is applied to the system, and a certain output is expected. However, the double-inverse pendulum is extremely sensitive to initial conditions. Even a small deviation from the calculated trajectory can cause a failed swing-up. A possible solution is to add feedback control. If we denote by <span class="math inline">\(u_{f}\)</span> the input given by as the forward control and that given by <span class="math inline">\(u_{b}\)</span> as the backward control, then the resultant is given by their sum (Fig. <a class="quarto-xref" href="#fig-4">4</a>).</p>
+<button aria-label="View source, page 4" class="source-button" data-block="p4-b25">
+p. 4
+</button>
+<p><button aria-label="View source, page 5" class="source-button" data-block="p5-b3">p. 5</button></p>
 </div>
-<div id="p5-b5" class="paper-block" data-source-page="5">
-<p>Finding a trajectory for the swing-up function is a case of the boundary value problem. The equation of motion (1) is a system of ordinary differential equations (ODEs), and the boundary conditions are as follows:</p>
-<button class="source-button" data-block="p5-b5" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="margin-scope-end" id="p4-b25-scope-margin-end-41">
+</div>
+<div class="paper-block margin-item" data-margin-for="p4-b25-scope" data-source-page="5" id="p5-b2">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-4">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_4_image_2.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-4-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 4: Block diagram of feedforward and feedback control for swing-up.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b2">
+p. 5
 </button>
 </div>
-<div id="p5-b5-scope-margin-end-46" class="margin-scope-end">
-
+<section class="level3" id="sec-p5-b4">
+<h3 class="anchored" data-anchor-id="sec-p5-b4">4.1 Boundary value problem (BVP) with free parameters</h3>
+<div class="margin-scope" data-margin-end="p5-b5-scope-margin-end-42" id="p5-b5-scope">
 </div>
-<div id="p5-b6" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_7.jpg">
-<p><span class="math display">\[
-\begin{array}{c} \boldsymbol {\theta} _ {0} (t = 0) = [ 0, \pi , \pi , 0, 0, 0 ] ^ {T}, \boldsymbol {\theta} _ {T} (t = T) \\ = [ 0, 0, 0, 0, 0, 0 ] ^ {T}, \end{array}\tag{24}
-\]</span></p>
-<button class="source-button" data-block="p5-b6" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b5">
+<p>Finding a trajectory for the swing-up function is a case of the boundary value problem. The equation of motion (<a class="quarto-xref" href="#eq-1">1</a>) is a system of ordinary differential equations (ODEs), and the boundary conditions are as follows:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b5">
+p. 5
 </button>
 </div>
-<div id="p5-b7-scope" class="margin-scope" data-margin-end="p5-b7-scope-margin-end-47">
-
+<div class="margin-scope-end" id="p5-b5-scope-margin-end-42">
 </div>
-<div id="p5-b7" class="paper-block" data-source-page="5">
-<p>where t is the time, and T is the duration of the swing. For the 6 equations and 12 conditions, the associated boundary value problem is overdetermined. In order to solve it, Qian et al.&nbsp;(2011) propose defining the cart trajectory <span class="math inline">\(Y(t)\)</span> by the cosine series (13) and thus adding the necessary number of free <span class="math inline">\(p = \left[p_{1}  p_{2}  p_{3}  p_{4}\right]\)</span> to the equation of motion.</p>
-<button class="source-button" data-block="p5-b7" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_7.jpg" data-source-page="5" id="p5-b6">
+<p><span id="eq-24"><span class="math display">\[
+\begin{array}{c} \boldsymbol {\theta} _ {0} (t = 0) = [ 0, \pi , \pi , 0, 0, 0 ] ^ {T}, \boldsymbol {\theta} _ {T} (t = T) \\ = [ 0, 0, 0, 0, 0, 0 ] ^ {T}, \end{array}
+\tag{24}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b6">
+p. 5
 </button>
 </div>
-<div id="p5-b7-scope-margin-end-47" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p5-b7-scope-margin-end-43" id="p5-b7-scope">
 </div>
-<div id="p5-b8" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_9.jpg">
-<p><span class="math display">\[
-Y (t, p) = a _ {0} + a _ {1} \cos \left(\frac {\pi t}{T}\right) + \sum_ {i = 2} ^ {5} p _ {i - 1} \cos \left(\frac {i \pi t}{T}\right)\tag{25}
-\]</span></p>
-<button class="source-button" data-block="p5-b8" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b7">
+<p>where t is the time, and T is the duration of the swing. For the 6 equations and 12 conditions, the associated boundary value problem is overdetermined. In order to solve it, <span class="citation" data-cites="paper-ref-12">Qian et al. (<a href="#ref-paper-ref-12" role="doc-biblioref">2011</a>)</span> propose defining the cart trajectory <span class="math inline">\(Y(t)\)</span> by the cosine series (<a class="quarto-xref" href="#eq-13">13</a>) and thus adding the necessary number of free <span class="math inline">\(p = \left[p_{1}  p_{2}  p_{3}  p_{4}\right]\)</span> to the equation of motion.</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b7">
+p. 5
 </button>
 </div>
-<div id="p5-b9-scope" class="margin-scope" data-margin-end="p5-b9-scope-margin-end-48">
-
+<div class="margin-scope-end" id="p5-b7-scope-margin-end-43">
 </div>
-<div id="p5-b9" class="paper-block" data-source-page="5">
-<p>The terms <span class="math inline">\(a_0 = -(p_1 + p_3)\)</span> and <span class="math inline">\(a_1 = -(p_2 + p_4)\)</span> are obtained by setting <span class="math inline">\(Y(0,p)=Y(T,p)=0\)</span> , which appears by deriving Eq. (13) by time. The boundary value problem can be solved by a suitable numerical method. If the deviation of the actual state values from the nominal trajectory <span class="math inline">\(\boldsymbol{\theta}^{*}\)</span> and input <span class="math inline">\(u^{*}\)</span> is sufficiently small, the system can be described by a linear time-dependent state equation (Zhong and Rock, 2001):</p>
-<button class="source-button" data-block="p5-b9" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_9.jpg" data-source-page="5" id="p5-b8">
+<p><span id="eq-25"><span class="math display">\[
+Y (t, p) = a _ {0} + a _ {1} \cos \left(\frac {\pi t}{T}\right) + \sum_ {i = 2} ^ {5} p _ {i - 1} \cos \left(\frac {i \pi t}{T}\right)
+\tag{25}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b8">
+p. 5
 </button>
 </div>
-<div id="p5-b9-scope-margin-end-48" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p5-b9-scope-margin-end-44" id="p5-b9-scope">
 </div>
-<div id="p5-b10" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_11.jpg">
-<p><span class="math display">\[
-\Delta \dot {\boldsymbol {\theta}} (t) = \mathbf {A} (t) \Delta \boldsymbol {\theta} (t) + \mathbf {B} (t) \Delta u (t),\tag{26}
-\]</span></p>
-<button class="source-button" data-block="p5-b10" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b9">
+<p>The terms <span class="math inline">\(a_0 = -(p_1 + p_3)\)</span> and <span class="math inline">\(a_1 = -(p_2 + p_4)\)</span> are obtained by setting <span class="math inline">\(Y(0,p)=Y(T,p)=0\)</span> , which appears by deriving Eq. (<a class="quarto-xref" href="#eq-13">13</a>) by time. The boundary value problem can be solved by a suitable numerical method. If the deviation of the actual state values from the nominal trajectory <span class="math inline">\(\boldsymbol{\theta}^{*}\)</span> and input <span class="math inline">\(u^{*}\)</span> is sufficiently small, the system can be described by a linear time-dependent state equation <span class="citation" data-cites="paper-ref-14">(<a href="#ref-paper-ref-14" role="doc-biblioref">Zhong and Rock, 2001</a>)</span>:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b9">
+p. 5
 </button>
 </div>
-<div id="p5-b11-scope" class="margin-scope" data-margin-end="p5-b11-scope-margin-end-49">
-
+<div class="margin-scope-end" id="p5-b9-scope-margin-end-44">
 </div>
-<div id="p5-b11" class="paper-block" data-source-page="5">
-<p>where the matrices A and B are given by the linearization of Eq. (12) (see “Feedback linearization” section) along the nominal trajectory and input. And for such a system, we design a linear controller at each time instant:</p>
-<button class="source-button" data-block="p5-b11" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_11.jpg" data-source-page="5" id="p5-b10">
+<p><span id="eq-26"><span class="math display">\[
+\Delta \dot {\boldsymbol {\theta}} (t) = \mathbf {A} (t) \Delta \boldsymbol {\theta} (t) + \mathbf {B} (t) \Delta u (t),
+\tag{26}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b10">
+p. 5
 </button>
 </div>
-<div id="p5-b11-scope-margin-end-49" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p5-b11-scope-margin-end-45" id="p5-b11-scope">
 </div>
-<div id="p5-b12" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_13.jpg">
-<p><span class="math display">\[
-\Delta u (t) = - \boldsymbol {K} _ {\mathrm{c}} (t) \Delta \theta (t) = - \boldsymbol {K} _ {\mathrm{c}} (t) (\boldsymbol {\theta} (t) - \boldsymbol {\theta} ^ {*} (t)),\tag{27}
-\]</span></p>
-<button class="source-button" data-block="p5-b12" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b11">
+<p>where the matrices A and B are given by the linearization of Eq. (<a class="quarto-xref" href="#eq-12">12</a>) (see “Feedback linearization” section) along the nominal trajectory and input. And for such a system, we design a linear controller at each time instant:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b11">
+p. 5
 </button>
 </div>
-<div id="p5-b13-scope" class="margin-scope" data-margin-end="p5-b13-scope-margin-end-50">
-
+<div class="margin-scope-end" id="p5-b11-scope-margin-end-45">
 </div>
-<div id="p5-b13" class="paper-block" data-source-page="5">
-<p>where the control matrix K is computed forward. Its calculation therefore does not burden the processor on which the</p>
-<button class="source-button" data-block="p5-b13" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_13.jpg" data-source-page="5" id="p5-b12">
+<p><span id="eq-27"><span class="math display">\[
+\Delta u (t) = - \boldsymbol {K} _ {\mathrm{c}} (t) \Delta \theta (t) = - \boldsymbol {K} _ {\mathrm{c}} (t) (\boldsymbol {\theta} (t) - \boldsymbol {\theta} ^ {*} (t)),
+\tag{27}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b12">
+p. 5
 </button>
 </div>
-<div id="p5-b13-scope-margin-end-50" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p5-b13-scope-margin-end-46" id="p5-b13-scope">
 </div>
-<div id="p5-b14-scope" class="margin-scope" data-margin-end="p5-b14-scope-margin-end-51">
-
+<div class="paper-block prose-block" data-source-page="5" id="p5-b13">
+<p>where the control matrix K is computed forward. Its calculation therefore does not burden the processor on which the swing-up and subsequent stabilization program runs. The resulting forward and backward control actions are given by the following:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b13">
+p. 5
+</button>
+<p><button aria-label="View source, page 5" class="source-button" data-block="p5-b14">p. 5</button></p>
 </div>
-<div id="p5-b14" class="paper-block" data-source-page="5">
-<p>swing-up and subsequent stabilization program runs. The resulting forward and backward control actions are given by the following:</p>
-<button class="source-button" data-block="p5-b14" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="margin-scope-end" id="p5-b13-scope-margin-end-46">
+</div>
+<div class="paper-block" data-equation-image="images/page_4_equation_16.jpg" data-source-page="5" id="p5-b15">
+<p><span id="eq-28"><span class="math display">\[
+u (t) = u _ {\mathrm{a}} (t) + \boldsymbol {K} _ {\mathrm{c}} (t) \left(\boldsymbol {\theta} ^ {*} (t) - \boldsymbol {\theta} (t)\right).
+\tag{28}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b15">
+p. 5
 </button>
 </div>
-<div id="p5-b14-scope-margin-end-51" class="margin-scope-end">
-
-</div>
-<div id="p5-b15" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_16.jpg">
-<p><span class="math display">\[
-u (t) = u _ {\mathrm{a}} (t) + \boldsymbol {K} _ {\mathrm{c}} (t) \left(\boldsymbol {\theta} ^ {*} (t) - \boldsymbol {\theta} (t)\right).\tag{28}
-\]</span></p>
-<button class="source-button" data-block="p5-b15" aria-label="View source, page 5">
-p.&nbsp;5
-</button>
-</div>
-<div id="p5-b16" class="paper-block" data-source-page="5">
-<section id="partial-linearization-and-feedforward" class="level2">
-<h2 class="anchored" data-anchor-id="partial-linearization-and-feedforward">4.2 Partial linearization and feedforward</h2>
-<button class="source-button" data-block="p5-b16" aria-label="View source, page 5">
-p.&nbsp;5
-</button>
 </section>
+<section class="level3" id="sec-p5-b16">
+<h3 class="anchored" data-anchor-id="sec-p5-b16">4.2 Partial linearization and feedforward</h3>
+<div class="margin-scope" data-margin-end="p5-b17-scope-margin-end-47" id="p5-b17-scope">
 </div>
-<div id="p5-b17-scope" class="margin-scope" data-margin-end="p5-b17-scope-margin-end-52">
-
-</div>
-<div id="p5-b17" class="paper-block" data-source-page="5">
+<div class="paper-block prose-block" data-source-page="5" id="p5-b17">
 <p>By studying the natural motion of a system (without control), some useful knowledge can be gained. In order to calculate a suitable elevation trajectory, the natural frequencies of the system must be found. This is based on the findings of the feedback linearization (FBL).</p>
-<button class="source-button" data-block="p5-b17" aria-label="View source, page 5">
-p.&nbsp;5
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b17">
+p. 5
 </button>
 </div>
-<div id="p5-b17-scope-margin-end-52" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b17-scope-margin-end-47">
 </div>
-<div id="p5-b18-scope" class="margin-scope" data-margin-end="p5-b18-scope-margin-end-53">
-
+<div class="margin-scope" data-margin-end="p5-b18-scope-margin-end-48" id="p5-b18-scope">
 </div>
-<div id="p5-b18" class="paper-block" data-source-page="5">
-<p>For the sake of partial linearization, the generalized coordinates of the double-inverse pendulum and the variable vector q are divided into two parts; <span class="math inline">\(\pmb{q}_{x}\)</span> denotes the controlled part (the carriage), and <span class="math inline">\(\pmb{q}_{\theta}\)</span> denotes the rest with zero dynamics (the pendulum). With the proposed decomposition, Eq. (5) is decomposed into the following:</p>
-<button class="source-button" data-block="p5-b18" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b18">
+<p>For the sake of partial linearization, the generalized coordinates of the double-inverse pendulum and the variable vector q are divided into two parts; <span class="math inline">\(\pmb{q}_{x}\)</span> denotes the controlled part (the carriage), and <span class="math inline">\(\pmb{q}_{\theta}\)</span> denotes the rest with zero dynamics (the pendulum). With the proposed decomposition, Eq. (<a class="quarto-xref" href="#eq-5">5</a>) is decomposed into the following:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b18">
+p. 5
 </button>
 </div>
-<div id="p5-b18-scope-margin-end-53" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b18-scope-margin-end-48">
 </div>
-<div id="p5-b19" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_20.jpg">
-<p><span class="math display">\[
-\mathbf {M} _ {x x} \ddot {\boldsymbol {q}} _ {x} + \mathbf {M} _ {x \theta} \ddot {\boldsymbol {q}} _ {\theta} + \mathbf {B} _ {x x} \dot {\boldsymbol {q}} _ {\mathrm{X}} + \mathbf {B} _ {x \theta} \dot {\boldsymbol {q}} _ {\theta} = u,\tag{29}
-\]</span></p>
-<button class="source-button" data-block="p5-b19" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_20.jpg" data-source-page="5" id="p5-b19">
+<p><span id="eq-29"><span class="math display">\[
+\mathbf {M} _ {x x} \ddot {\boldsymbol {q}} _ {x} + \mathbf {M} _ {x \theta} \ddot {\boldsymbol {q}} _ {\theta} + \mathbf {B} _ {x x} \dot {\boldsymbol {q}} _ {\mathrm{X}} + \mathbf {B} _ {x \theta} \dot {\boldsymbol {q}} _ {\theta} = u,
+\tag{29}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b19">
+p. 5
 </button>
 </div>
-<div id="p5-b20" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_21.jpg">
-<p><span class="math display">\[
-\mathbf {M} _ {\theta x} \ddot {\boldsymbol {q}} _ {x} + \mathbf {M} _ {\theta \theta} \ddot {\boldsymbol {q}} _ {\theta} + \mathbf {B} _ {\theta \theta} \dot {\boldsymbol {q}} _ {\theta} + \mathbf {K} _ {\theta} = 0,\tag{30}
-\]</span></p>
-<button class="source-button" data-block="p5-b20" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_21.jpg" data-source-page="5" id="p5-b20">
+<p><span id="eq-30"><span class="math display">\[
+\mathbf {M} _ {\theta x} \ddot {\boldsymbol {q}} _ {x} + \mathbf {M} _ {\theta \theta} \ddot {\boldsymbol {q}} _ {\theta} + \mathbf {B} _ {\theta \theta} \dot {\boldsymbol {q}} _ {\theta} + \mathbf {K} _ {\theta} = 0,
+\tag{30}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b20">
+p. 5
 </button>
 </div>
-<div id="p5-b21-scope" class="margin-scope" data-margin-end="p5-b21-scope-margin-end-54">
-
+<div class="margin-scope" data-margin-end="p5-b21-scope-margin-end-49" id="p5-b21-scope">
 </div>
-<div id="p5-b21" class="paper-block" data-source-page="5">
+<div class="paper-block prose-block" data-source-page="5" id="p5-b21">
 <p>and the matrices M, B, and K become</p>
-<button class="source-button" data-block="p5-b21" aria-label="View source, page 5">
-p.&nbsp;5
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b21">
+p. 5
 </button>
 </div>
-<div id="p5-b21-scope-margin-end-54" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b21-scope-margin-end-49">
 </div>
-<div id="p5-b22" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_23.jpg">
+<div class="paper-block" data-equation-image="images/page_4_equation_23.jpg" data-source-page="5" id="p5-b22">
 <p><span class="math display">\[
 \left| \begin{array}{l} \mathbf {M} (q) = \left[ \begin{array}{c c} \mathbf {M} _ {x x} (1, 1) &amp; \mathbf {M} _ {x \theta} (1, 2) \\ \mathbf {M} _ {\theta x} (2, 1) &amp; \mathbf {M} _ {\theta \theta} (2, 2) \end{array} \right], \mathbf {B} (\boldsymbol {q}, \dot {\boldsymbol {q}}) \\ = \left[ \begin{array}{c c} \mathbf {B} _ {x x} (1, 1) &amp; \mathbf {B} _ {x \theta} (1, 2) \\ \mathbf {0} (2, 1) &amp; \mathbf {B} _ {\theta \theta} (2, 2) \end{array} \right], \mathbf {K} (\boldsymbol {q}, \dot {\boldsymbol {q}}) \\ = \left[ \begin{array}{c} 0 \\ \mathbf {K} _ {\theta} (2, 1) \end{array} \right], \end{array} \right|
 \]</span></p>
-<button class="source-button" data-block="p5-b22" aria-label="View source, page 5">
-p.&nbsp;5
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b22">
+p. 5
 </button>
 </div>
-<div id="p5-b23-scope" class="margin-scope" data-margin-end="p5-b23-scope-margin-end-55">
-
+<div class="margin-scope" data-margin-end="p5-b23-scope-margin-end-50" id="p5-b23-scope">
 </div>
-<div id="p5-b23" class="paper-block" data-source-page="5">
-<p>where 0 represents the zero vector, and the numbers in parentheses indicate the dimension of the matrix – so, for example, <span class="math inline">\(\mathbf{M}_{x\theta} = [d_{2}\cos \theta_{1} d_{3}\cos \theta_{2}]\)</span> . From Eq. (30), <span class="math inline">\(\left|\ddot{\boldsymbol{q}}_{\theta}\right|\)</span> is expressed and substituted into Eq. (29). If the output of the system is <span class="math inline">\(y = q_{x}\)</span> , then the feedback linearization of the obtained equation gives the following:</p>
-<button class="source-button" data-block="p5-b23" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b23">
+<p>where 0 represents the zero vector, and the numbers in parentheses indicate the dimension of the matrix – so, for example, <span class="math inline">\(\mathbf{M}_{x\theta} = [d_{2}\cos \theta_{1} d_{3}\cos \theta_{2}]\)</span> . From Eq. (<a class="quarto-xref" href="#eq-30">30</a>), <span class="math inline">\(\left|\ddot{\boldsymbol{q}}_{\theta}\right|\)</span> is expressed and substituted into Eq. (<a class="quarto-xref" href="#eq-29">29</a>). If the output of the system is <span class="math inline">\(y = q_{x}\)</span> , then the feedback linearization of the obtained equation gives the following:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b23">
+p. 5
 </button>
 </div>
-<div id="p5-b23-scope-margin-end-55" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b23-scope-margin-end-50">
 </div>
-<div id="p5-b24" class="paper-block" data-source-page="5" data-equation-image="images/page_4_equation_25.jpg">
-<p><span class="math display">\[
-\begin{array}{l} \ddot {y} = \ddot {q} _ {x} = v, \\ u = \mathbf {B} _ {x x} \dot {\boldsymbol {q}} _ {x} + (\mathbf {B} _ {x \theta} + \mathbf {W B} _ {\theta \theta}) \dot {\boldsymbol {q}} _ {\theta} + \mathbf {W K} _ {\theta} \\ \quad + (\mathbf {W M} _ {\theta x} + \mathbf {M} _ {x x}) v, \end{array}\tag{31}
-\]</span></p>
-<button class="source-button" data-block="p5-b24" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block" data-equation-image="images/page_4_equation_25.jpg" data-source-page="5" id="p5-b24">
+<p><span id="eq-31"><span class="math display">\[
+\begin{array}{l} \ddot {y} = \ddot {q} _ {x} = v, \\ u = \mathbf {B} _ {x x} \dot {\boldsymbol {q}} _ {x} + (\mathbf {B} _ {x \theta} + \mathbf {W B} _ {\theta \theta}) \dot {\boldsymbol {q}} _ {\theta} + \mathbf {W K} _ {\theta} \\ \quad + (\mathbf {W M} _ {\theta x} + \mathbf {M} _ {x x}) v, \end{array}
+\tag{31}\]</span></span></p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b24">
+p. 5
 </button>
 </div>
-<div id="p5-b25-scope" class="margin-scope" data-margin-end="p5-b25-scope-margin-end-56">
-
+<div class="margin-scope" data-margin-end="p5-b25-scope-margin-end-51" id="p5-b25-scope">
 </div>
-<div id="p5-b25" class="paper-block" data-source-page="5">
+<div class="paper-block prose-block" data-source-page="5" id="p5-b25">
 <ol start="32" type="1">
 <li></li>
 </ol>
-<button class="source-button" data-block="p5-b25" aria-label="View source, page 5">
-p.&nbsp;5
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b25">
+p. 5
 </button>
 </div>
-<div id="p5-b25-scope-margin-end-56" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b25-scope-margin-end-51">
 </div>
-<div id="p5-b26-scope" class="margin-scope" data-margin-end="p5-b26-scope-margin-end-57">
-
+<div class="margin-scope" data-margin-end="p5-b26-scope-margin-end-52" id="p5-b26-scope">
 </div>
-<div id="p5-b26" class="paper-block" data-source-page="5">
+<div class="paper-block prose-block" data-source-page="5" id="p5-b26">
 <p>where, to simplify the notation, <span class="math inline">\(\mathbf{W} = -\mathbf{M}_{x\theta}\mathbf{M}_{\theta \theta}^{-1}\)</span></p>
-<button class="source-button" data-block="p5-b26" aria-label="View source, page 5">
-p.&nbsp;5
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b26">
+p. 5
 </button>
 </div>
-<div id="p5-b26-scope-margin-end-57" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p5-b26-scope-margin-end-52">
 </div>
-<div id="p5-b27-scope" class="margin-scope" data-margin-end="p5-b27-scope-margin-end-58">
-
+<div class="margin-scope" data-margin-end="p5-b27-scope-margin-end-53" id="p5-b27-scope">
 </div>
-<div id="p5-b27" class="paper-block" data-source-page="5">
-<p>The principle further consists of finding an input v for which the boundary conditions in Eq. (24) hold. In general, it is given by the sum of two parts. The first makes the cart move a certain distance from the initial state at time T . However, since the end position of the cart is supposed to be identical to the initial position, i.e., <span class="math inline">\(\theta_0(0) = \theta_0(T) = 0\)</span> , the mentioned component will be zero for this case. The second component does not change the final position of the cart,</p>
-<button class="source-button" data-block="p5-b27" aria-label="View source, page 5">
-p.&nbsp;5
+<div class="paper-block prose-block" data-source-page="5" id="p5-b27">
+<p>The principle further consists of finding an input v for which the boundary conditions in Eq. (<a class="quarto-xref" href="#eq-24">24</a>) hold. In general, it is given by the sum of two parts. The first makes the cart move a certain distance from the initial state at time T . However, since the end position of the cart is supposed to be identical to the initial position, i.e., <span class="math inline">\(\theta_0(0) = \theta_0(T) = 0\)</span> , the mentioned component will be zero for this case. The second component does not change the final position of the cart, but due to the entanglement via zero dynamics, it will cause the pendulums to swing. It is proposed in the following form <span class="citation" data-cites="paper-ref-5">(<a href="#ref-paper-ref-5" role="doc-biblioref">Hedrick and Girard, 2010</a>)</span>:</p>
+<button aria-label="View source, page 5" class="source-button" data-block="p5-b27">
+p. 5
+</button>
+<p><button aria-label="View source, page 6" class="source-button" data-block="p6-b3">p. 6</button></p>
+</div>
+<div class="margin-scope-end" id="p5-b27-scope-margin-end-53">
+</div>
+<div class="paper-block" data-equation-image="images/page_5_equation_5.jpg" data-source-page="6" id="p6-b4">
+<p><span id="eq-33"><span class="math display">\[
+v = \sum_ {i} A _ {i} \sin (2 \pi f _ {i} t + \varphi_ {i}).
+\tag{33}\]</span></span></p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b4">
+p. 6
 </button>
 </div>
-<div id="p5-b27-scope-margin-end-58" class="margin-scope-end">
-
+<div class="margin-scope" data-margin-end="p6-b5-scope-margin-end-54" id="p6-b5-scope">
 </div>
-<div id="p6-b2" class="paper-block margin-item" data-source-page="6" data-margin-for="p6-b10-scope">
-<p><img src="images/page_5_image_2.jpg" class="img-fluid"></p>
-<p>Figure 5. Simulation procedure in MATLAB and Simulink.</p>
-<button class="source-button" data-block="p6-b2" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
-</div>
-<div id="p6-b3-scope" class="margin-scope" data-margin-end="p6-b3-scope-margin-end-59">
-
-</div>
-<div id="p6-b3" class="paper-block" data-source-page="6">
-<p>but due to the entanglement via zero dynamics, it will cause the pendulums to swing. It is proposed in the following form (Hedrick and Girard, 2010):</p>
-<button class="source-button" data-block="p6-b3" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
-</div>
-<div id="p6-b3-scope-margin-end-59" class="margin-scope-end">
-
-</div>
-<div id="p6-b4" class="paper-block" data-source-page="6" data-equation-image="images/page_5_equation_5.jpg">
-<p><span class="math display">\[
-v = \sum_ {i} A _ {i} \sin (2 \pi f _ {i} t + \varphi_ {i}).\tag{33}
-\]</span></p>
-<button class="source-button" data-block="p6-b4" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
-</div>
-<div id="p6-b5-scope" class="margin-scope" data-margin-end="p6-b5-scope-margin-end-60">
-
-</div>
-<div id="p6-b5" class="paper-block" data-source-page="6">
+<div class="paper-block prose-block" data-source-page="6" id="p6-b5">
 <p>The amplitudes <span class="math inline">\(A_{i}\)</span> are relative to the change in the potential energy of the system:</p>
-<button class="source-button" data-block="p6-b5" aria-label="View source, page 6">
-p.&nbsp;6
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b5">
+p. 6
 </button>
 </div>
-<div id="p6-b5-scope-margin-end-60" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p6-b5-scope-margin-end-54">
 </div>
-<div id="p6-b6" class="paper-block" data-source-page="6" data-equation-image="images/page_5_equation_7.jpg">
-<p><span class="math display">\[
-\Delta E _ {p} = m _ {1} l _ {1} g + m _ {2} (L _ {1} + l _ {2}) g.\tag{34}
-\]</span></p>
-<button class="source-button" data-block="p6-b6" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block" data-equation-image="images/page_5_equation_7.jpg" data-source-page="6" id="p6-b6">
+<p><span id="eq-34"><span class="math display">\[
+\Delta E _ {p} = m _ {1} l _ {1} g + m _ {2} (L _ {1} + l _ {2}) g.
+\tag{34}\]</span></span></p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b6">
+p. 6
 </button>
 </div>
-<div id="p6-b7-scope" class="margin-scope" data-margin-end="p6-b7-scope-margin-end-61">
-
+<div class="margin-scope" data-margin-end="p6-b7-scope-margin-end-55" id="p6-b7-scope">
 </div>
-<div id="p6-b7" class="paper-block" data-source-page="6">
-<p>However, the exact numbers, as well as the phase shifts <span class="math inline">\(\varphi_{i}\)</span> are the result of an optimization process to obtain boundary conditions for the <span class="math inline">\(\pmb{q}_{\theta}\)</span> coordinates as well. If there are natural numbers <span class="math inline">\(\boldsymbol{K}_{i}\)</span> , then the following holds (Neusser and Valášek, 2013):</p>
-<button class="source-button" data-block="p6-b7" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block prose-block" data-source-page="6" id="p6-b7">
+<p>However, the exact numbers, as well as the phase shifts <span class="math inline">\(\varphi_{i}\)</span> are the result of an optimization process to obtain boundary conditions for the <span class="math inline">\(\pmb{q}_{\theta}\)</span> coordinates as well. If there are natural numbers <span class="math inline">\(\boldsymbol{K}_{i}\)</span> , then the following holds <span class="citation" data-cites="paper-ref-10">(<a href="#ref-paper-ref-10" role="doc-biblioref">Neusser and Valášek, 2013</a>)</span>:</p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b7">
+p. 6
 </button>
 </div>
-<div id="p6-b7-scope-margin-end-61" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p6-b7-scope-margin-end-55">
 </div>
-<div id="p6-b8" class="paper-block" data-source-page="6" data-equation-image="images/page_5_equation_9.jpg">
-<p><span class="math display">\[
-2 \pi \boldsymbol {f} _ {i} T = 2 \pi \boldsymbol {K} _ {i}.\tag{35}
-\]</span></p>
-<button class="source-button" data-block="p6-b8" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block" data-equation-image="images/page_5_equation_9.jpg" data-source-page="6" id="p6-b8">
+<p><span id="eq-35"><span class="math display">\[
+2 \pi \boldsymbol {f} _ {i} T = 2 \pi \boldsymbol {K} _ {i}.
+\tag{35}\]</span></span></p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b8">
+p. 6
 </button>
 </div>
-<div id="p6-b9" class="paper-block" data-source-page="6">
-<section id="simulations" class="level2">
-<h2 class="anchored" data-anchor-id="simulations">5 Simulations</h2>
-<button class="source-button" data-block="p6-b9" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
 </section>
-</div>
-<div id="p6-b10-scope" class="margin-scope" data-margin-end="p6-b10-scope-margin-end-62">
-
-</div>
-<div id="p6-b10" class="paper-block" data-source-page="6">
-<p>The calculations of the linearized model and the gains of the controller and observer are shown in Fig. 5. In order to avoid the errors as much as possible, after deriving Eq. (5), all further modifications were performed using the Symbolic Math Toolbox in MATLAB. In this way, the equation of motion (12) and its linearized form in the form of state space matrices A and B were obtained. These are complex relations with a considerable number of terms. The system was further simulated in Simulink environment with an ode4 (Runge–Kutta) solver with a constant time step of 0.001 s. The verification of the equation of motion (12) was successful. It faithfully describes the model under consideration. This is one of the basic prerequisites for the design of a successful control algorithm. The parameters used in the simulation are shown in Table 1.</p>
-<button class="source-button" data-block="p6-b10" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
-</div>
-<div id="p6-b10-scope-margin-end-62" class="margin-scope-end">
-
-</div>
-<div id="p6-b11" class="paper-block" data-source-page="6">
-<section id="stabilization-control-simulation" class="level2">
-<h2 class="anchored" data-anchor-id="stabilization-control-simulation">5.1 Stabilization control simulation</h2>
-<button class="source-button" data-block="p6-b11" aria-label="View source, page 6">
-p.&nbsp;6
-</button>
 </section>
+<section class="level2" id="sec-p6-b9">
+<h2 class="anchored" data-anchor-id="sec-p6-b9">5 Simulations</h2>
+<div class="margin-scope" data-margin-end="p6-b10-scope-margin-end-56" id="p6-b10-scope">
 </div>
-<div id="p6-b12-scope" class="margin-scope" data-margin-end="p6-b12-scope-margin-end-63">
-
-</div>
-<div id="p6-b12" class="paper-block" data-source-page="6">
-<p>In Sect. 3.1 in this article, the method of obtaining the linear equations of the system described by the matrices A and B was explained. The optimal control multipliers K were calculated based on the model and the given weight matrices <span class="math inline">\(Q_{\mathrm{c}}\)</span> and <span class="math inline">\(R_{\mathrm{c}}\)</span> . An extended Kalman filter was used as an observer to perform the correction</p>
-<button class="source-button" data-block="p6-b12" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block prose-block" data-source-page="6" id="p6-b10">
+<p>The calculations of the linearized model and the gains of the controller and observer are shown in Fig. <a class="quarto-xref" href="#fig-5">5</a>. In order to avoid the errors as much as possible, after deriving Eq. (<a class="quarto-xref" href="#eq-5">5</a>), all further modifications were performed using the Symbolic Math Toolbox in MATLAB. In this way, the equation of motion (<a class="quarto-xref" href="#eq-12">12</a>) and its linearized form in the form of state space matrices A and B were obtained. These are complex relations with a considerable number of terms. The system was further simulated in Simulink environment with an ode4 (Runge–Kutta) solver with a constant time step of 0.001 s. The verification of the equation of motion (<a class="quarto-xref" href="#eq-12">12</a>) was successful. It faithfully describes the model under consideration. This is one of the basic prerequisites for the design of a successful control algorithm. The parameters used in the simulation are shown in Table <a class="quarto-xref" href="#tbl-1">1</a>.</p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b10">
+p. 6
 </button>
 </div>
-<div id="p6-b12-scope-margin-end-63" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p6-b10-scope-margin-end-56">
 </div>
-<div id="p6-b13" class="paper-block margin-item" data-source-page="6" data-margin-for="p6-b14-scope">
-<p><img src="images/page_5_chart_14.jpg" class="img-fluid"></p>
-<p>Figure 6. Stabilization control of the system using LQR controller.</p>
-<button class="source-button" data-block="p6-b13" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block margin-item" data-margin-for="p6-b10-scope" data-source-page="6" id="p6-b2">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-5">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_5_image_2.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-5-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 5: Simulation procedure in MATLAB and Simulink.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b2">
+p. 6
 </button>
 </div>
-<div id="p6-b14-scope" class="margin-scope" data-margin-end="p6-b14-scope-margin-end-64">
-
+<div class="paper-block margin-item" data-margin-for="p6-b10-scope" data-source-page="7" id="p7-b2">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="tbl-1">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table 1: Parameters values used in the simulation.
+</figcaption>
+<div aria-describedby="tbl-1-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_6_table_3.jpg"/>
 </div>
-<div id="p6-b14" class="paper-block" data-source-page="6">
-<p>based on the measurement of the carriage position and the pendulum rotation. The <span class="math inline">\(Q_{\mathrm{c}}\)</span> and <span class="math inline">\(R_{c}\)</span> for the LQR controller and <span class="math inline">\(Q_{\mathrm{Kal}}\)</span> and <span class="math inline">\(R_{\mathrm{Kal}}\)</span> for the Kalman filter are chosen as follows: <span class="math inline">\(Q_{\mathrm{c}} = \mathrm{diag}[10350350000],R_{\mathrm{c}} =\)</span> 1 , <span class="math inline">\(Q_{\mathrm{Kal}} = \mathrm{diag}[0.1 \quad 0.03 \quad 0.03 \quad 0.15 \quad 0.4 \quad 0.4]\)</span> , and <span class="math inline">\(R_{\mathrm{Kal}} = \mathrm{diag}[0.3\quad 0.7\quad 0.7]\)</span> . Sensor noise was simulated at this stage by random numbers with a Gaussian distribution around zero mean. Nevertheless, the stabilization task was very easy compared to the subsequent tuning on the real system. The main objective of the simulation was to verify the correctness of the programming and the functionality of the algorithm. Figure 6 shows the stabilization waveform for initial conditions <span class="math inline">\(\theta_0 = 0.2\mathrm{m},\theta_1 = 10^\circ\)</span> , and <span class="math inline">\(\theta_{2} = -10^{\circ}\)</span> . The desired carriage position is indicated in red in the figure. This is because the positioning of the carriage is relatively easy to achieve since the stability of the system does not depend on <span class="math inline">\(\theta_{0}\)</span> as the only one of the states. The control law was given as <span class="math inline">\(u(t) = Nr(t) - \mathbf{K}x(t);r(t)\)</span> is the desired cart position, <span class="math inline">\(N=-\mathbf{B}^{-1}(\mathbf{A}-\mathbf{B}\mathbf{K})\mathbf{C}^{T}\)</span> , and for this case <span class="math inline">\(C = [0.100000]\)</span></p>
-<button class="source-button" data-block="p6-b14" aria-label="View source, page 6">
-p.&nbsp;6
+</figure>
+</div>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b2">
+p. 7
 </button>
 </div>
-<div id="p6-b14-scope-margin-end-64" class="margin-scope-end">
-
+<section class="level3" id="sec-p6-b11">
+<h3 class="anchored" data-anchor-id="sec-p6-b11">5.1 Stabilization control simulation</h3>
+<div class="margin-scope" data-margin-end="p6-b12-scope-margin-end-57" id="p6-b12-scope">
 </div>
-<div id="p6-b15" class="paper-block" data-source-page="6">
-<section id="swing-up-control-simulation" class="level2">
-<h2 class="anchored" data-anchor-id="swing-up-control-simulation">5.2 Swing-up control simulation</h2>
-<button class="source-button" data-block="p6-b15" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block prose-block" data-source-page="6" id="p6-b12">
+<p>In Sect. 3.1 in this article, the method of obtaining the linear equations of the system described by the matrices A and B was explained. The optimal control multipliers K were calculated based on the model and the given weight matrices <span class="math inline">\(Q_{\mathrm{c}}\)</span> and <span class="math inline">\(R_{\mathrm{c}}\)</span> . An extended Kalman filter was used as an observer to perform the correction based on the measurement of the carriage position and the pendulum rotation. The <span class="math inline">\(Q_{\mathrm{c}}\)</span> and <span class="math inline">\(R_{c}\)</span> for the LQR controller and <span class="math inline">\(Q_{\mathrm{Kal}}\)</span> and <span class="math inline">\(R_{\mathrm{Kal}}\)</span> for the Kalman filter are chosen as follows: <span class="math inline">\(Q_{\mathrm{c}} = \mathrm{diag}[10350350000],R_{\mathrm{c}} =\)</span> 1 , <span class="math inline">\(Q_{\mathrm{Kal}} = \mathrm{diag}[0.1 \quad 0.03 \quad 0.03 \quad 0.15 \quad 0.4 \quad 0.4]\)</span> , and <span class="math inline">\(R_{\mathrm{Kal}} = \mathrm{diag}[0.3\quad 0.7\quad 0.7]\)</span> . Sensor noise was simulated at this stage by random numbers with a Gaussian distribution around zero mean. Nevertheless, the stabilization task was very easy compared to the subsequent tuning on the real system. The main objective of the simulation was to verify the correctness of the programming and the functionality of the algorithm. Figure <a class="quarto-xref" href="#fig-6">6</a> shows the stabilization waveform for initial conditions <span class="math inline">\(\theta_0 = 0.2\mathrm{m},\theta_1 = 10^\circ\)</span> , and <span class="math inline">\(\theta_{2} = -10^{\circ}\)</span> . The desired carriage position is indicated in red in the figure. This is because the positioning of the carriage is relatively easy to achieve since the stability of the system does not depend on <span class="math inline">\(\theta_{0}\)</span> as the only one of the states. The control law was given as <span class="math inline">\(u(t) = Nr(t) - \mathbf{K}x(t);r(t)\)</span> is the desired cart position, <span class="math inline">\(N=-\mathbf{B}^{-1}(\mathbf{A}-\mathbf{B}\mathbf{K})\mathbf{C}^{T}\)</span> , and for this case <span class="math inline">\(C = [0.100000]\)</span></p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b12">
+p. 6
 </button>
+<p><button aria-label="View source, page 6" class="source-button" data-block="p6-b14">p. 6</button></p>
+</div>
+<div class="margin-scope-end" id="p6-b12-scope-margin-end-57">
+</div>
+<div class="paper-block margin-item" data-margin-for="p6-b12-scope" data-source-page="6" id="p6-b13">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-6">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_5_chart_14.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-6-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 6: Stabilization control of the system using LQR controller.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b13">
+p. 6
+</button>
+</div>
 </section>
+<section class="level3" id="sec-p6-b15">
+<h3 class="anchored" data-anchor-id="sec-p6-b15">5.2 Swing-up control simulation</h3>
+<div class="margin-scope" data-margin-end="p6-b16-scope-margin-end-58" id="p6-b16-scope">
 </div>
-<div id="p6-b16-scope" class="margin-scope" data-margin-end="p6-b16-scope-margin-end-65">
-
-</div>
-<div id="p6-b16" class="paper-block" data-source-page="6">
-<p>In this section, the simulation results of swing-up trajectories and the subsequent application of forward and reverse control are addressed. The MATLAB numerical solver bvp4c was used to find suitable swing-up trajectories according to the method described in Sect. 4.1. For the double-pendulum model, where the input is the acceleration of the trolley, boundary conditions (24) were considered, except for defining the end position of the cart and its velocity, for which the boundary value is guaranteed by choosing the input as a cosine series (13). A time-dependent linear controller was designed along the nominal swing-up trajectory (with a time step of 10 ms and subsequent linear interpolation between the calculated points). It turned out that, over a certain time interval, the control multiples undergo abrupt changes in magnitude and sign. Since the linear controller was derived from a double-pendulum model where the input is directly the ac-</p>
-<button class="source-button" data-block="p6-b16" aria-label="View source, page 6">
-p.&nbsp;6
+<div class="paper-block prose-block" data-source-page="6" id="p6-b16">
+<p>In this section, the simulation results of swing-up trajectories and the subsequent application of forward and reverse control are addressed. The MATLAB numerical solver bvp4c was used to find suitable swing-up trajectories according to the method described in Sect. 4.1. For the double-pendulum model, where the input is the acceleration of the trolley, boundary conditions (<a class="quarto-xref" href="#eq-24">24</a>) were considered, except for defining the end position of the cart and its velocity, for which the boundary value is guaranteed by choosing the input as a cosine series (<a class="quarto-xref" href="#eq-13">13</a>). A time-dependent linear controller was designed along the nominal swing-up trajectory (with a time step of 10 ms and subsequent linear interpolation between the calculated points). It turned out that, over a certain time interval, the control multiples undergo abrupt changes in magnitude and sign. Since the linear controller was derived from a double-pendulum model where the input is directly the ac-</p>
+<button aria-label="View source, page 6" class="source-button" data-block="p6-b16">
+p. 6
 </button>
 </div>
-<div id="p6-b16-scope-margin-end-65" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p6-b16-scope-margin-end-58">
 </div>
-<div id="p7-b2" class="paper-block margin-item" data-source-page="7" data-margin-for="p6-b10-scope">
-<p>Table 1. Parameters values used in the simulation.</p>
-<table class="caption-top table">
-<colgroup>
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-<col style="width: 12%">
-</colgroup>
-<thead>
-<tr class="header">
-<th><span class="math inline">\(l_{1}\)</span> [m]</th>
-<th>0.13</th>
-<th><span class="math inline">\(I_{1}\)</span> [kg m<span class="math inline">\(^{2}\)</span>]</th>
-<th><span class="math inline">\(1.186 \times 10^{-3}\)</span></th>
-<th><span class="math inline">\(b_{1}\)</span> [m.N.s rad<span class="math inline">\(^{-1}\)</span>]</th>
-<th>0.155</th>
-<th><span class="math inline">\(m_{1}\)</span> [kg]</th>
-<th>0.1345</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td><span class="math inline">\(l_{2}\)</span> [m]</td>
-<td>0.12</td>
-<td><span class="math inline">\(I_{2}\)</span> [kg m<span class="math inline">\(^{2}\)</span>]</td>
-<td><span class="math inline">\(0.469 \times 10^{-3}\)</span></td>
-<td><span class="math inline">\(b_{2}\)</span> [m.N.s rad<span class="math inline">\(^{-1}\)</span>]</td>
-<td>0.106</td>
-<td><span class="math inline">\(m_{2}\)</span>[kg]</td>
-<td>0.0715</td>
-</tr>
-<tr class="even">
-<td><span class="math inline">\(L_{1}\)</span> [m]</td>
-<td>0.23</td>
-<td><span class="math inline">\(m_{0}\)</span> [kg]</td>
-<td>1.3</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
-</tbody>
-</table>
-<button class="source-button" data-block="p7-b2" aria-label="View source, page 7">
-p.&nbsp;7
-</button>
+<div class="margin-scope" data-margin-end="p7-b4-scope-margin-end-59" id="p7-b4-scope">
 </div>
-<div id="p7-b3" class="paper-block margin-item" data-source-page="7" data-margin-for="p7-b5-scope">
-<p><img src="images/page_6_chart_4.jpg" class="img-fluid"></p>
-<p>Figure 7. Feedforward and LQR feedback swing-up and stabilization.</p>
-<button class="source-button" data-block="p7-b3" aria-label="View source, page 7">
-p.&nbsp;7
-</button>
-</div>
-<div id="p7-b4-scope" class="margin-scope" data-margin-end="p7-b4-scope-margin-end-66">
-
-</div>
-<div id="p7-b4" class="paper-block" data-source-page="7">
+<div class="paper-block prose-block" data-source-page="7" id="p7-b4">
 <p>celeration of the carriage, its proposed intervention also has an acceleration dimension. Therefore, it has to be converted to a force based on the current states according to Eq. (32). In view of this and the fact that the system is often at the limit of drivability or loses it completely at these moments, it was decided to take the reverse steering out of action for a while.</p>
-<button class="source-button" data-block="p7-b4" aria-label="View source, page 7">
-p.&nbsp;7
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b4">
+p. 7
 </button>
 </div>
-<div id="p7-b4-scope-margin-end-66" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p7-b4-scope-margin-end-59">
 </div>
-<div id="p7-b5-scope" class="margin-scope" data-margin-end="p7-b5-scope-margin-end-67">
-
+<div class="margin-scope" data-margin-end="p7-b5-scope-margin-end-60" id="p7-b5-scope">
 </div>
-<div id="p7-b5" class="paper-block" data-source-page="7">
-<p>In Fig. 7, the swing-up state behavior is shown. It is clear that the control approach successfully followed the derived trajectory and moved the system from the downward to upward position in a short amount of time. All the states of the system are stable and follow the desired values. The actual and the estimated states of the system converge perfectly, which proves the effectiveness of the dynamic input– output decoupling approach. The abrupt disengagement and engagement of the reverse control caused a disproportionately large impulse response with the eventual consequence of loss of stability and a failed swing-up. Therefore, around the critical interval, the multiples <span class="math inline">\(K_{\mathrm{c}}\)</span> are linearly decreased or increased, as presented in Fig. 8. For the simulation, it is useful to set the duration of the linear region to 0.1 s. If the pendulum rotation approaches the inverse position during the swing-up, it is switched to LQG stabilization.</p>
-<button class="source-button" data-block="p7-b5" aria-label="View source, page 7">
-p.&nbsp;7
+<div class="paper-block prose-block" data-source-page="7" id="p7-b5">
+<p>In Fig. <a class="quarto-xref" href="#fig-7">7</a>, the swing-up state behavior is shown. It is clear that the control approach successfully followed the derived trajectory and moved the system from the downward to upward position in a short amount of time. All the states of the system are stable and follow the desired values. The actual and the estimated states of the system converge perfectly, which proves the effectiveness of the dynamic input– output decoupling approach. The abrupt disengagement and engagement of the reverse control caused a disproportionately large impulse response with the eventual consequence of loss of stability and a failed swing-up. Therefore, around the critical interval, the multiples <span class="math inline">\(K_{\mathrm{c}}\)</span> are linearly decreased or increased, as presented in Fig. <a class="quarto-xref" href="#fig-8">8</a>. For the simulation, it is useful to set the duration of the linear region to 0.1 s. If the pendulum rotation approaches the inverse position during the swing-up, it is switched to LQG stabilization.</p>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b5">
+p. 7
 </button>
 </div>
-<div id="p7-b5-scope-margin-end-67" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p7-b5-scope-margin-end-60">
 </div>
-<div id="p7-b6-scope" class="margin-scope" data-margin-end="p7-b6-scope-margin-end-68">
-
+<div class="paper-block margin-item" data-margin-for="p7-b5-scope" data-source-page="7" id="p7-b3">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-7">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_6_chart_4.jpg"/>
 </div>
-<div id="p7-b6" class="paper-block" data-source-page="7">
-<p>Trajectories with a duration of 1.85 s were selected for simulation purposes. The progress of such a swing-up is illustrated by the video sequence at the following link: <a href="https://youtu.be/zr0fzmVc9Ao">https://youtu.be/zr0fzmVc9Ao</a> (last access: 18 January 2024). In Fig. 9, the process of swing-up control is illustrated by following the pendulums during the motion. The animation shows that the swing-up process effectively finished based on the designed controller.</p>
-<button class="source-button" data-block="p7-b6" aria-label="View source, page 7">
-p.&nbsp;7
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-7-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 7: Feedforward and LQR feedback swing-up and stabilization.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b3">
+p. 7
 </button>
 </div>
-<div id="p7-b6-scope-margin-end-68" class="margin-scope-end">
-
+<div class="paper-block margin-item" data-margin-for="p7-b5-scope" data-source-page="7" id="p7-b8">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-8">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_6_chart_10.jpg"/>
 </div>
-<div id="p7-b8" class="paper-block margin-item" data-source-page="7" data-margin-for="p7-b5-scope">
-<p><img src="images/page_6_chart_10.jpg" class="img-fluid"></p>
-<p>Figure 8. Controller gain for swing-up control action.</p>
-<button class="source-button" data-block="p7-b8" aria-label="View source, page 7">
-p.&nbsp;7
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-8-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 8: Controller gain for swing-up control action.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b8">
+p. 7
 </button>
 </div>
-<div id="p7-b9" class="paper-block margin-item" data-source-page="7" data-margin-for="p7-b6-scope">
-<p><img src="images/page_6_chart_12.jpg" class="img-fluid"></p>
-<p>Figure 9. Simplified graphic display of the swing-up process.</p>
-<button class="source-button" data-block="p7-b9" aria-label="View source, page 7">
-p.&nbsp;7
+<div class="margin-scope" data-margin-end="p7-b6-scope-margin-end-61" id="p7-b6-scope">
+</div>
+<div class="paper-block prose-block" data-source-page="7" id="p7-b6">
+<p>Trajectories with a duration of 1.85 s were selected for simulation purposes. The progress of such a swing-up is illustrated by the video sequence at the following link: <a href="https://youtu.be/zr0fzmVc9Ao">https://youtu.be/zr0fzmVc9Ao</a> (last access: 18 January 2024). In Fig. <a class="quarto-xref" href="#fig-9">9</a>, the process of swing-up control is illustrated by following the pendulums during the motion. The animation shows that the swing-up process effectively finished based on the designed controller.</p>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b6">
+p. 7
 </button>
 </div>
-<div id="p7-b10" class="paper-block" data-source-page="7">
-<section id="conclusions" class="level2">
-<h2 class="anchored" data-anchor-id="conclusions">6 Conclusions</h2>
-<button class="source-button" data-block="p7-b10" aria-label="View source, page 7">
-p.&nbsp;7
+<div class="margin-scope-end" id="p7-b6-scope-margin-end-61">
+</div>
+<div class="paper-block margin-item" data-margin-for="p7-b6-scope" data-source-page="7" id="p7-b9">
+<div class="quarto-float quarto-figure quarto-figure-center anchored" id="fig-9">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img class="img-fluid figure-img" src="images/page_6_chart_12.jpg"/>
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-9-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure 9: Simplified graphic display of the swing-up process.
+</figcaption>
+</figure>
+</div>
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b9">
+p. 7
 </button>
+</div>
 </section>
+</section>
+<section class="level2" id="sec-p7-b10">
+<h2 class="anchored" data-anchor-id="sec-p7-b10">6 Conclusions</h2>
+<div class="margin-scope" data-margin-end="p7-b11-scope-margin-end-62" id="p7-b11-scope">
 </div>
-<div id="p7-b11-scope" class="margin-scope" data-margin-end="p7-b11-scope-margin-end-69">
-
-</div>
-<div id="p7-b11" class="paper-block" data-source-page="7">
+<div class="paper-block prose-block" data-source-page="7" id="p7-b11">
 <p>A model of the double-inverted pendulum was obtained, including the assumption of all necessary parameters. Also, thanks to this, a robust and long-lasting stabilization of both pendulums in the inverted position was implemented. This is implemented by the LQR method. The system states are estimated by a non-linear extended Kalman filter.</p>
-<button class="source-button" data-block="p7-b11" aria-label="View source, page 7">
-p.&nbsp;7
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b11">
+p. 7
 </button>
 </div>
-<div id="p7-b11-scope-margin-end-69" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p7-b11-scope-margin-end-62">
 </div>
-<div id="p7-b12-scope" class="margin-scope" data-margin-end="p7-b12-scope-margin-end-70">
-
+<div class="margin-scope" data-margin-end="p7-b12-scope-margin-end-63" id="p7-b12-scope">
 </div>
-<div id="p7-b12" class="paper-block" data-source-page="7">
+<div class="paper-block prose-block" data-source-page="7" id="p7-b12">
 <p>By solving the boundary value problem with the numerical proper solver, nominal trajectories for the swing-up function have been obtained. The required cart acceleration was implemented by a controller with 2 degrees of freedom – a forward PID control of the cart speed and a feedback LQR controller, whose controller gains were calculated off-line along the nominal trajectories and input. Fortunately, the planned swing-up was achieved despite the chaotic behavior of the real system. The algorithm proved its worth in simulation; a complete swing-up was still realized several times.</p>
-<button class="source-button" data-block="p7-b12" aria-label="View source, page 7">
-p.&nbsp;7
+<button aria-label="View source, page 7" class="source-button" data-block="p7-b12">
+p. 7
 </button>
 </div>
-<div id="p7-b12-scope-margin-end-70" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p7-b12-scope-margin-end-63">
 </div>
-<div id="p8-b2-scope" class="margin-scope" data-margin-end="p8-b2-scope-margin-end-71">
-
+<div class="margin-scope" data-margin-end="p8-b2-scope-margin-end-64" id="p8-b2-scope">
 </div>
-<div id="p8-b2" class="paper-block" data-source-page="8">
+<div class="paper-block prose-block" data-source-page="8" id="p8-b2">
 <p><strong>Data availability.</strong> The data that support the findings of this study are available from the corresponding author upon reasonable request.</p>
-<button class="source-button" data-block="p8-b2" aria-label="View source, page 8">
-p.&nbsp;8
+<button aria-label="View source, page 8" class="source-button" data-block="p8-b2">
+p. 8
 </button>
 </div>
-<div id="p8-b2-scope-margin-end-71" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p8-b2-scope-margin-end-64">
 </div>
-<div id="p8-b3-scope" class="margin-scope" data-margin-end="p8-b3-scope-margin-end-72">
-
+<div class="margin-scope" data-margin-end="p8-b3-scope-margin-end-65" id="p8-b3-scope">
 </div>
-<div id="p8-b3" class="paper-block" data-source-page="8">
+<div class="paper-block prose-block" data-source-page="8" id="p8-b3">
 <p><strong>Author contributions.</strong> AMAJ conceived the idea and mathematical modeling. MTH was responsible the programming and finding the results. ASG Qanber was responsible for the proofreading and financial support.</p>
-<button class="source-button" data-block="p8-b3" aria-label="View source, page 8">
-p.&nbsp;8
+<button aria-label="View source, page 8" class="source-button" data-block="p8-b3">
+p. 8
 </button>
 </div>
-<div id="p8-b3-scope-margin-end-72" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p8-b3-scope-margin-end-65">
 </div>
-<div id="p8-b4-scope" class="margin-scope" data-margin-end="p8-b4-scope-margin-end-73">
-
+<div class="margin-scope" data-margin-end="p8-b4-scope-margin-end-66" id="p8-b4-scope">
 </div>
-<div id="p8-b4" class="paper-block" data-source-page="8">
+<div class="paper-block prose-block" data-source-page="8" id="p8-b4">
 <p><strong>Competing interests.</strong> The contact author has declared that none of the authors has any competing interests.</p>
-<button class="source-button" data-block="p8-b4" aria-label="View source, page 8">
-p.&nbsp;8
+<button aria-label="View source, page 8" class="source-button" data-block="p8-b4">
+p. 8
 </button>
 </div>
-<div id="p8-b4-scope-margin-end-73" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p8-b4-scope-margin-end-66">
 </div>
-<div id="p8-b5-scope" class="margin-scope" data-margin-end="p8-b5-scope-margin-end-74">
-
+<div class="margin-scope" data-margin-end="p8-b5-scope-margin-end-67" id="p8-b5-scope">
 </div>
-<div id="p8-b5" class="paper-block" data-source-page="8">
+<div class="paper-block prose-block" data-source-page="8" id="p8-b5">
 <p><strong>Disclaimer.</strong> Publisher’s note: Copernicus Publications remains neutral with regard to jurisdictional claims made in the text, published maps, institutional affiliations, or any other geographical representation in this paper. While Copernicus Publications makes every effort to include appropriate place names, the final responsibility lies with the authors.</p>
-<button class="source-button" data-block="p8-b5" aria-label="View source, page 8">
-p.&nbsp;8
+<button aria-label="View source, page 8" class="source-button" data-block="p8-b5">
+p. 8
 </button>
 </div>
-<div id="p8-b5-scope-margin-end-74" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p8-b5-scope-margin-end-67">
 </div>
-<div id="p8-b6-scope" class="margin-scope" data-margin-end="p8-b6-scope-margin-end-75">
-
+<div class="margin-scope" data-margin-end="p8-b6-scope-margin-end-68" id="p8-b6-scope">
 </div>
-<div id="p8-b6" class="paper-block" data-source-page="8">
+<div class="paper-block prose-block" data-source-page="8" id="p8-b6">
 <p><strong>Review statement.</strong> This paper was edited by Daniel Condurache and reviewed by Petr Chalupa and one anonymous referee.</p>
-<button class="source-button" data-block="p8-b6" aria-label="View source, page 8">
-p.&nbsp;8
+<button aria-label="View source, page 8" class="source-button" data-block="p8-b6">
+p. 8
 </button>
 </div>
-<div id="p8-b6-scope-margin-end-75" class="margin-scope-end">
-
+<div class="margin-scope-end" id="p8-b6-scope-margin-end-68">
 </div>
-<div id="p8-b7" class="paper-block" data-source-page="8">
-<section id="references" class="level2">
-<h2 class="anchored" data-anchor-id="references">References</h2>
-<button class="source-button" data-block="p8-b7" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
 </section>
+<section class="level2" id="references">
+<h2 class="anchored" data-anchor-id="references">References</h2>
+<div class="references csl-bib-body" id="refs" role="list">
+<div class="csl-entry" id="ref-paper-ref-1" role="listitem">
+Aguiar, A. P.: Nonlinear Control Systems, IST-DEEC PhD Course, Institute for Systems and Robotics, Lisboa, Portugal, http://users.isr.ist.utl.pt/~pedro/NCS2012/ (last access: 29 December 2023), 2011.
 </div>
-<div id="p8-b8" class="paper-block" data-source-page="8">
-<p>Aguiar, A. P.: Nonlinear Control Systems, IST-DEEC PhD Course, Institute for Systems and Robotics, Lisboa, Portugal, <a href="http://users.isr.ist.utl.pt/~pedro/NCS2012/">http://users.isr.ist.utl.pt/~pedro/NCS2012/</a> (last access: 29 December 2023), 2011.</p>
-<button class="source-button" data-block="p8-b8" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-2" role="listitem">
+Bogdanov, A.: Optimal control of a double inverted pendulum on a cart, Oregon Health and Science University, Tech. Rep. CSE-04-006, OGI School of Science and Engineering, Beaverton, OR, Corpus ID: 18478090, 2004.
 </div>
-<div id="p8-b9" class="paper-block" data-source-page="8">
-<p>Bogdanov, A.: Optimal control of a double inverted pendulum on a cart, Oregon Health and Science University, Tech. Rep.&nbsp;CSE-04-006, OGI School of Science and Engineering, Beaverton, OR, Corpus ID: 18478090, 2004.</p>
-<button class="source-button" data-block="p8-b9" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-3" role="listitem">
+Franklin, G. F., Powell, J. D., Emami-Naeini, A., and Powell, J. D.: Feedback control of dynamic systems, Vol. 4. Prentice hall Upper Saddle River, ISBN 978-0-13-349659-8, 2002.
 </div>
-<div id="p8-b10" class="paper-block" data-source-page="8">
-<p>Franklin, G. F., Powell, J. D., Emami-Naeini, A., and Powell, J. D.: Feedback control of dynamic systems, Vol. 4. Prentice hall Upper Saddle River, ISBN 978-0-13-349659-8, 2002.</p>
-<button class="source-button" data-block="p8-b10" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-4" role="listitem">
+Graichen, K., Treuer, M., and Zeitz, M.: <span>“Swing-up of the double pendulum on a cart by feedforward and feedback control with experimental validation,”</span> Automatica, 43, 63–71, https://doi.org/10.1016/j.automatica.2006.07.023, 2007.
 </div>
-<div id="p8-b11" class="paper-block" data-source-page="8">
-<p>Graichen, K., Treuer, M., and Zeitz, M.: “Swing-up of the double pendulum on a cart by feedforward and feedback control with experimental validation,” Automatica, 43, 63–71, https://doi.org/<a href="https://doi.org/10.1016/j.automatica.2006.07.023">10.1016/j.automatica.2006.07.023</a>, 2007.</p>
-<button class="source-button" data-block="p8-b11" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-5" role="listitem">
+Hedrick, J. K. and Girard, A.: Control of nonlinear dynamic systems: Theory and applications, Controllability and observability of Nonlinear Systems, Berkeley: University of California, 151–181, 2010.
 </div>
-<div id="p8-b12" class="paper-block" data-source-page="8">
-<p>Hedrick, J. K. and Girard, A.: Control of nonlinear dynamic systems: Theory and applications, Controllability and observability of Nonlinear Systems, Berkeley: University of California, 151–181, 2010.</p>
-<button class="source-button" data-block="p8-b12" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-6" role="listitem">
+Henmi, T., Deng, M., and Inoue, A.: <span>“Unified method for swing-up control of double inverted pendulum systems,”</span> in: Proceedings of the 2014 International Conference on Advanced Mechatronic Systems, 572–577, https://doi.org/10.1109/ICAMechS.2014.6911611, 2014.
 </div>
-<div id="p8-b13" class="paper-block" data-source-page="8">
-<p>Henmi, T., Deng, M., and Inoue, A.: “Unified method for swing-up control of double inverted pendulum systems,” in: Proceedings of the 2014 International Conference on Advanced Mechatronic Systems, 572–577, https://doi.org/<a href="https://doi.org/10.1109/ICAMechS.2014.6911611">10.1109/ICAMechS.2014.6911611</a>, 2014.</p>
-<button class="source-button" data-block="p8-b13" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-7" role="listitem">
+Henson, M. A. and Seborg, D. E.: Nonlinear process control, Prentice Hall PTR Upper Saddle River, New Jersey, ISBN 013625179X, 9780136251798, 1997.
 </div>
-<div id="p8-b14" class="paper-block" data-source-page="8">
-<p>Henson, M. A. and Seborg, D. E.: Nonlinear process control, Prentice Hall PTR Upper Saddle River, New Jersey, ISBN 013625179X, 9780136251798, 1997.</p>
-<button class="source-button" data-block="p8-b14" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-8" role="listitem">
+Jaiwat, P. and Ohtsuka, T.: Real-time swing-up of double inverted pendulum by nonlinear model predictive control, in: 5th International Symposium on Advanced Control of Industrial Processes, 290–295, Corpus ID: 19016427, 2014.
 </div>
-<div id="p8-b15" class="paper-block" data-source-page="8">
-<p>Jaiwat, P. and Ohtsuka, T.: Real-time swing-up of double inverted pendulum by nonlinear model predictive control, in: 5th International Symposium on Advanced Control of Industrial Processes, 290–295, Corpus ID: 19016427, 2014.</p>
-<button class="source-button" data-block="p8-b15" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-9" role="listitem">
+Mon, Y.-J. and Lin, C.-M.: <span>“Double inverted pendulum decoupling control by adaptive terminal sliding-mode recurrent fuzzy neural network,”</span> J. Intell. Fuzzy Syst., 26, 1723–1729, https://doi.org/10.3233/IFS-130851, 2014.
 </div>
-<div id="p8-b16" class="paper-block" data-source-page="8">
-<p>Mon, Y.-J. and Lin, C.-M.: “Double inverted pendulum decoupling control by adaptive terminal sliding-mode recurrent fuzzy neural network”, J. Intell. Fuzzy Syst., 26, 1723–1729, https://doi.org/<a href="https://doi.org/10.3233/IFS-130851">10.3233/IFS-130851</a>, 2014.</p>
-<button class="source-button" data-block="p8-b16" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-10" role="listitem">
+Neusser, Z. and Valášek, M.: <span>“Control of the double inverted pendulum on a cart using the natural motion,”</span> Acta Polytech., 53, 883–889, https://doi.org/10.14311/AP.2013.53.0883, 2013.
 </div>
-<div id="p8-b18" class="paper-block" data-source-page="8">
-<p>Neusser, Z. and Valášek, M.: “Control of the double inverted pendulum on a cart using the natural motion”, Acta Polytech., 53, 883–889, https://doi.org/<a href="https://doi.org/10.14311/AP.2013.53.0883">10.14311/AP.2013.53.0883</a>, 2013.</p>
-<button class="source-button" data-block="p8-b18" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-11" role="listitem">
+Nise, N. S.: Control systems engineering, Chapter 6, 240–268, John Wiley &amp; Sons, ISBN 978-1-119-47422-7, 2020.
 </div>
-<div id="p8-b19" class="paper-block" data-source-page="8">
-<p>Nise, N. S.: Control systems engineering, Chapter 6, 240–268, John Wiley &amp; Sons, ISBN 978-1-119-47422-7, 2020.</p>
-<button class="source-button" data-block="p8-b19" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-12" role="listitem">
+Qian, Q., Dongmei, D., Feng, L., and Yongchuan, T.: <span>“Stabilization of the double inverted pendulum based on discretetime model predictive control,”</span> in 2011 IEEE International Conference on Automation and Logistics (ICAL), 243–247, https://doi.org/10.1109/ICAL.2011.6024721, 2011.
 </div>
-<div id="p8-b20" class="paper-block" data-source-page="8">
-<p>Qian, Q., Dongmei, D., Feng, L., and Yongchuan, T.: “Stabilization of the double inverted pendulum based on discretetime model predictive control,” in 2011 IEEE International Conference on Automation and Logistics (ICAL), 243–247, https://doi.org/<a href="https://doi.org/10.1109/ICAL.2011.6024721">10.1109/ICAL.2011.6024721</a>, 2011.</p>
-<button class="source-button" data-block="p8-b20" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-13" role="listitem">
+Sun, Z., Wang, N., and Bi, Y.: <span>“Type-1/type-2 fuzzy logic systems optimization with RNA genetic algorithm for double inverted pendulum,”</span> Appl. Math. Model, 39, 70–85, https://doi.org/10.1016/j.apm.2014.04.035, 2015.
 </div>
-<div id="p8-b21" class="paper-block" data-source-page="8">
-<p>Sun, Z., Wang, N., and Bi, Y.: “Type-1/type-2 fuzzy logic systems optimization with RNA genetic algorithm for double inverted pendulum”, Appl. Math. Model, 39, 70–85, https://doi.org/<a href="https://doi.org/10.1016/j.apm.2014.04.035">10.1016/j.apm.2014.04.035</a>, 2015.</p>
-<button class="source-button" data-block="p8-b21" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
+<div class="csl-entry" id="ref-paper-ref-14" role="listitem">
+Zhong, W. and Rock, H.: <span>“Energy and passivity based control of the double inverted pendulum on a cart,”</span> in: Proceedings of the 2001 IEEE International Conference on Control Applications (CCA’01) (Cat. No. 01CH37204), 896–901, https://doi.org/10.1109/CCA.2001.973983, 2001.
 </div>
-<div id="p8-b22" class="paper-block" data-source-page="8">
-<p>Zhong, W. and Rock, H.: “Energy and passivity based control of the double inverted pendulum on a cart,” in: Proceedings of the 2001 IEEE International Conference on Control Applications (CCA’01) (Cat. No.&nbsp;01CH37204), 896–901, https://doi.org/<a href="https://doi.org/10.1109/CCA.2001.973983">10.1109/CCA.2001.973983</a>, 2001.</p>
-<button class="source-button" data-block="p8-b22" aria-label="View source, page 8">
-p.&nbsp;8
-</button>
 </div>
-
-
-
+</section>
 </main> <!-- /main -->
 <script src="sources.js"></script>
 <script>
@@ -1663,6 +1380,12 @@ p.&nbsp;8
  async function metadata(){return sources ||= window.FluentSources}
  function dialog(title){const d=document.createElement('dialog');const bar=document.createElement('div');bar.className='dialog-toolbar';const label=document.createElement('span');label.textContent=title;const close=document.createElement('button');close.textContent='Close';close.onclick=()=>d.close();bar.append(label,close);d.append(bar);d.addEventListener('close',()=>d.remove());d.addEventListener('click',e=>{if(e.target===d)d.close()});document.body.append(d);d.showModal();return d}
  window.addEventListener('load',()=>{if(window.MathJax?.startup?.promise)window.MathJax.startup.promise.then(()=>{document.querySelectorAll('[data-equation-image]').forEach(b=>{if(b.querySelector('[data-mjx-error],mjx-merror')){const m=b.querySelector('.math');if(m){const i=document.createElement('img');i.src=b.dataset.equationImage;i.alt='Original equation';i.style.maxWidth='100%';m.replaceWith(i)}}})})});
+ const tocLinks=[...document.querySelectorAll('#TOC a[href^="#"]')];
+ const tocTargets=tocLinks.map(a=>({a,node:document.getElementById(decodeURIComponent(a.hash.slice(1)))})).filter(x=>x.node);
+ let tocFrame=0;
+ function updateTOC(){tocFrame=0;if(!tocTargets.length)return;let current=tocTargets[0];for(const entry of tocTargets){const heading=entry.node.matches('h1,h2,h3,h4,h5,h6')?entry.node:entry.node.querySelector('h1,h2,h3,h4,h5,h6')||entry.node;if(heading.getBoundingClientRect().top<=125)current=entry;else break}for(const entry of tocTargets){const selected=entry===current;entry.a.classList.toggle('reader-current',selected);if(selected)entry.a.setAttribute('aria-current','location');else entry.a.removeAttribute('aria-current')}}
+ function scheduleTOC(){if(!tocFrame)tocFrame=requestAnimationFrame(updateTOC)}
+ window.addEventListener('scroll',scheduleTOC,{passive:true});window.addEventListener('resize',scheduleTOC);window.addEventListener('load',scheduleTOC);tocLinks.forEach(a=>a.addEventListener('click',()=>setTimeout(scheduleTOC,80)));scheduleTOC();
  document.getElementById('toggle-sources').onclick=()=>document.body.classList.toggle('show-sources');
  document.querySelectorAll('.source-button').forEach(b=>b.onclick=async()=>{const s=(await metadata())[b.dataset.block];const d=dialog(`Source · page ${s.page}`);const box=document.createElement('div');box.className='source-page';const im=document.createElement('img');im.src=`pages/${s.page}.jpg`;im.alt=`Original page ${s.page}`;box.append(im);if(s.bbox){const [x,y,r,bottom]=s.bbox;const highlight=document.createElement('div');highlight.className='source-highlight';highlight.style=`left:${x*100}%;top:${y*100}%;width:${(r-x)*100}%;height:${(bottom-y)*100}%`;box.append(highlight)}d.append(box);const a=document.createElement('a');a.href=`source.pdf#page=${s.page}`;a.textContent='Open PDF';d.append(a)});
  document.querySelectorAll('main .paper-block img').forEach(im=>{im.tabIndex=0;im.setAttribute('role','button');im.setAttribute('aria-label','Enlarge figure');const show=()=>{const d=dialog(im.alt||'Figure');const c=im.cloneNode();c.removeAttribute('tabindex');c.style='max-width:85vw;max-height:80vh;object-fit:contain';d.append(c)};im.onclick=show;im.onkeydown=e=>{if(e.key==='Enter')show()}});
@@ -2075,8 +1798,4 @@ p.&nbsp;8
   });
   </script>
 </div> <!-- /content -->
-
-
-
-
 </body></html>
