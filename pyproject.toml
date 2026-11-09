@@ -1,0 +1,11 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "fluent-paper"
+version = "0.1.0"
+description = "Local structured PDF reader for Apple Silicon"
+requires-python = ">=3.12"
+dependencies = ["mineru>=4,<5", "fastapi", "uvicorn", "python-multipart"]
+[project.scripts]
+fluent-paper = "fluent_paper.cli:main"

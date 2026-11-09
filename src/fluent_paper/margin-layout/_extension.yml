@@ -1,0 +1,7 @@
+title: Scoped margin layout
+version: 1.0.0
+contributes:
+  filters:
+    - at: pre-ast
+      path: margin-layout.lua
+
