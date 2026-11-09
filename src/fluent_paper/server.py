@@ -1,4 +1,4 @@
-"""Loopback-only UI. One lifespan-owned worker services browser/API uploads."""
+"""Local UI with explicitly configurable bind address. One lifespan-owned worker services browser/API uploads."""
 from contextlib import asynccontextmanager
 import html
 import os
@@ -26,7 +26,7 @@ async def lifespan(app):
     log.close()
 
 app=FastAPI(lifespan=lifespan)
-app.add_middleware(TrustedHostMiddleware,allowed_hosts=['localhost','127.0.0.1','testserver'])
+app.add_middleware(TrustedHostMiddleware,allowed_hosts=os.environ.get('FLUENT_PAPER_ALLOWED_HOSTS','localhost,127.0.0.1,testserver').split(','))
 
 @app.middleware('http')
 async def local_writes(request:Request,call_next):

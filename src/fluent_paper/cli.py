@@ -105,7 +105,7 @@ def main():
     rebuild = sub.add_parser('rebuild'); rebuild.add_argument('id', nargs='?', default='all')
     correct = sub.add_parser('correct'); correct.add_argument('id'); correct.add_argument('--model', default='qwen3:4b')
     retry = sub.add_parser('retry'); retry.add_argument('id')
-    serve = sub.add_parser('serve'); serve.add_argument('--port', type=int, default=8790)
+    serve = sub.add_parser('serve'); serve.add_argument('--port', type=int, default=8790); serve.add_argument('--host', default='127.0.0.1'); serve.add_argument('--allowed-host', action='append', default=[])
     args = parser.parse_args()
     if args.command == 'add':
         for pdf in args.pdf: print(add(pdf))
@@ -126,7 +126,14 @@ def main():
         with database() as db: db.execute("UPDATE papers SET status='queued' WHERE id=? AND status!='processing'", (args.id,))
     elif args.command == 'serve':
         import uvicorn
+        if args.host=='0.0.0.0':
+            import socket
+            hosts={'localhost','127.0.0.1','0.0.0.0',socket.gethostname(),socket.getfqdn(),'macpro.taile89f6b.ts.net'}
+            try: hosts.update(info[4][0] for info in socket.getaddrinfo(socket.gethostname(),None))
+            except OSError: pass
+            hosts.update(args.allowed_host)
+            os.environ['FLUENT_PAPER_ALLOWED_HOSTS']=','.join(sorted(hosts))
         from .server import app
-        uvicorn.run(app, host='127.0.0.1', port=args.port)
+        uvicorn.run(app, host=args.host, port=args.port)
 
 if __name__ == '__main__': main()

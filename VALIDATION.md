@@ -11,15 +11,17 @@ Environment: Apple M2 Ultra, 192 GB RAM; MinerU 4.1.7; Quarto; Ollama Qwen3 4B. 
 - The private papers' per-document average text-layer token overlap ranged from **0.857 to 0.993**. This is a diagnostic of word/character retention, not an accuracy score: equations, ligatures, reading order, OCR and PDF text-layer defects affect it.
 - **3,099 displayed and inline math expressions** were parsed with MathJax. **Six expressions in two private papers** produced syntax errors, including unmatched array environments and duplicate equation tags. Those displayed equations use their original image in the rebuilt reader; the extracted TeX is retained. A browser-side error fallback also uses the original equation image when available.
 - Two long possible body-text/caption misclassifications were found in one private paper. Ambiguous long captions now remain in the main column and are logged in `document.json`, rather than being hidden in the right margin.
-- Qwen3 4B was tested for whitespace-only corrections. Content-changing proposals are rejected; equations and numbers are not sent for correction. This corpus did not establish a reason to enable LLM rewriting by default. Original MinerU output remains immutable.
+- Qwen3 4B now selects ambiguous heading levels, paragraph-join modes, and minimal figure scopes. It receives extracted caption/prose context and returns constrained JSON with existing IDs, never replacement scientific text. Mechanical rules run first; scope selections are bounded to adjacent paragraphs in the same subsection. Inputs, decisions and errors are retained privately. Original MinerU output remains immutable.
+- Rebuilt headings use real Quarto section nesting. Figures follow restored paragraphs in source order. Native figure/equation links and citeproc references support repeated margin citations, including Japanese superscript citation marks. Original equation numbers are restored after rendering.
 
 ## Automated checks
 
-- 13 Python tests: deduplication, invalid input rejection, upload API, cross-origin and host checks, traversal, ZIP extraction boundary, preservation of TeX characters, rejection of model changes to numbers/negation, and executable-cell removal.
-- Six DOM assertions: source links, original page image, bounding-box highlight, close action, enlarged figure and gallery. These use jsdom, not a browser.
+- 21 Python tests, including hierarchy, layout-boundary joins, conservative figure scopes, Japanese and grouped figure labels, citation conversion, and: deduplication, invalid input rejection, upload API, cross-origin and host checks, traversal, ZIP extraction boundary, preservation of TeX characters, rejection of model changes to numbers/negation, and executable-cell removal.
+- 14 DOM assertions: source links, original page image, bounding-box highlight, close action, enlarged figure, gallery, scrolling TOC highlight and repeated citation targets. These use jsdom, not a browser.
 - Public sample's HTML image/script/style references resolve locally; no external rendering dependency remains. MathJax, fonts and source-page images are bundled.
-- All 12 rebuilt readers have unique HTML IDs, existing local images and complete source-button mappings. The six equation fallbacks were confirmed in the rebuilt intermediate data and HTML image paths.
+- `scripts/check_readers.py` checks all 12 rebuilt readers for unique HTML IDs, valid fragment links, existing local image/script/style assets, complete original-source mappings, figures outside prose containers, and preserved equation numbers. Equation fallback images are copied explicitly because Quarto does not discover data-attribute asset references.
 - GitHub Pages and the Mac Pro sample mirror returned HTTP 200 for HTML, CSS, JavaScript and source-page images. The mirror was checked from the same Mac; separate-device viewing was not tested.
+- The private preview listens on `0.0.0.0:8790`; both the Mac Pro Tailscale hostname and IP returned HTTP 200 from this Mac. Separate-device access has not been tested.
 - Private data is excluded by location and a fixed publisher-sample export allowlist, not just `.gitignore`.
 
 ## Limits

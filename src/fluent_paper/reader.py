@@ -45,7 +45,7 @@ def build_reader(folder, fallback_title):
     source = folder / 'parsed/middle_json.json'
     raw = json.loads(source.read_text())
     doc = normalize(source, folder / 'document.json')
-    site = folder / 'site'
+    site = folder / 'site-building'
     if site.exists(): shutil.rmtree(site)
     site.mkdir(exist_ok=True)
     shutil.copytree(ASSETS/'vendor',site/'vendor')
@@ -56,60 +56,69 @@ def build_reader(folder, fallback_title):
     title = next((text_content(b['original']['content']) for b in doc['blocks'] if b['type']=='doc_title'), fallback_title)
     corrections = json.loads((folder / 'corrections.json').read_text()) if (folder / 'corrections.json').exists() else {'changes':[]}
     changes = {x['id']:x for x in corrections['changes'] if x.get('accepted')}
-    blocks = doc['blocks']
-    references = {}
-    for b in blocks:
-        if b['type']=='ref_text':
-            number=re.match(r'\s*(\d+)[.)]',text_content(b['original']))
-            if number:
-                references[b['id']]=[t['id']+'-scope' for t in blocks if t['type']=='text' and re.search(r'\[[^\]]*\b'+number[1]+r'\b[^\]]*\]',text_content(t['original']))]
-            continue
-        if b['type'] not in VISUAL: continue
-        caption = ' '.join(text_content(c) for c in b['original'].get('content',[]) if c['type'].endswith('caption'))
-        match = re.search(r'(?:Fig(?:ure)?\.?|Table)\s*(\d+)',caption,re.I)
-        if match:
-            kind = 'Table' if caption.lstrip().lower().startswith('table') else 'Fig'
-            targets=[]
-            pattern = re.compile(r'\b'+kind+r'(?:ure)?s?\.?\s*'+match[1]+r'\b',re.I)
-            for t in blocks:
-                if t['type']=='text' and pattern.search(text_content(t['original'])): targets.append(t['id']+'-scope')
-            references[b['id']] = targets
+    from .structure import restore
+    from .references import References
+    import os
+    structure=restore(doc,folder,os.environ.get('FLUENT_PAPER_STRUCTURE_MODEL','qwen3:4b'))
+    blocks=structure['blocks']
+    refs=References(blocks);refs.write(site)
     validation=json.loads((folder/'math-validation.json').read_text()) if (folder/'math-validation.json').exists() else {'errors':[]}
-    math_errors={(e['page'], e.get('index')) for e in validation['errors']}
+    math_errors={(e['page'],e.get('index')) for e in validation['errors']}
     body=[]
     for b in blocks:
-        if b['type'] in SKIP: continue
-        original = deepcopy(b['original'])
-        if b['id'] in changes:
+        if b['type']=='ref_text':continue
+        original=deepcopy(b['original'])
+        if b['id'] in changes and len(b['sources'])==1:
             original['content']=changes[b['id']]['after']
-            b['corrections'].append(changes[b['id']])
+        if b['type']=='paragraph_title':
+            if re.match(r'^(References|Bibliography|参考文献)\s*$',text_content(original),re.I):continue
+            heading=deepcopy(original);heading['type']='text';heading.pop('level',None)
+            value=render_block(raw,heading).strip().replace('\n',' ')
+            body.append('#'*b['level']+' '+value+' {#sec-'+b['id']+'}')
+            continue
         equation_image=original.get('image_path') if b['type']=='equation' else None
-        bad_equation=(b['page'],original.get('index')) in math_errors
-        if b['type']=='equation':
-            latex=original.get('content','')
-            bad_equation=bad_equation or len(re.findall(r'\\tag\s*\{',latex))>1
-        if bad_equation and equation_image:
-            md=f'![Original equation]({equation_image})'
-            b['corrections'].append({'rule':'invalid extracted TeX; original equation image shown','accepted':True})
-        else: md = render_block(raw, original).strip()
-        if not md: continue
-        source_link=f'<button class="source-button" data-block="{b["id"]}" aria-label="View source, page {b["page"]}">p. {b["page"]}</button>'
-        classes='paper-block'
+        bad_equation=b['type']=='equation' and (b['page'],original.get('index')) in math_errors
+        if b['type']=='equation' and b.get('xref'):
+            latex=re.sub(r'\\tag\s*\{[^{}]*\}','',original['content'])
+            md='$$\n'+latex+'\n$$ {#'+b['xref']+'}'
+        elif b['type'] in VISUAL and b.get('xref'):
+            caption_parts=[];content_parts=[]
+            for child in original.get('content',[]):
+                if child.get('type','').endswith('caption'):
+                    c=deepcopy(child);c['type']='text';caption_parts.append(render_block(raw,c).strip())
+                elif child.get('image_path'):content_parts.append('![]('+child['image_path']+')')
+                elif child.get('type','').endswith('body'):
+                    content_parts.append(render_block(raw,original).strip())
+            caption=' '.join(caption_parts)
+            caption=re.sub(r'^\s*\*{0,2}(?:Fig(?:ure)?\.?|Table|図|表)\s*'+re.escape(b['label'][1])+r'[.:]?\s*\*{0,2}\s*','',caption,flags=re.I)
+            caption=re.sub(r'第\s*'+re.escape(b['label'][1])+r'[図表]\s*','',caption,count=1)
+            md='::: {#'+b['xref']+'}\n\n'+'\n\n'.join(content_parts)+'\n\n'+refs.convert(caption)+'\n\n:::'
+        else:md=render_block(raw,original).strip()
+        if not md:continue
+        if b['type']=='text':md=refs.convert(md)
+        sources=b['sources']
+        source_link=' '.join(f'<button class="source-button" data-block="{q["id"]}" aria-label="View source, page {q["page"]}">p. {q["page"]}</button>' for q in sources)
+        classes=['paper-block']
+        if b['type']=='text':classes.append('prose-block')
         attributes=f'data-source-page="{b["page"]}"'
-        if equation_image: attributes+=' data-equation-image="'+html.escape(equation_image,quote=True)+'"'
-        suspect = b['type'] in VISUAL and any(c.get('type','').endswith('caption') and len(text_content(c))>200 and not re.match(r'\s*(?:Fig(?:ure)?\.?|Table|図|表)\s*\d',text_content(c),re.I) for c in b['original'].get('content',[]))
-        if suspect:
-            b['corrections'].append({'rule':'ambiguous long caption retained in main column','accepted':True})
-        if not suspect and (b['type'] in VISUAL or b['type']=='page_footnote' or (b['type']=='ref_text' and references.get(b['id']))):
-            classes+=' margin-item'
-            targets=references.get(b['id'],[])
-            if targets: attributes+=' margin-for="'+' '.join(targets)+'"'
-        if b['type']=='text': body.append(f'::: {{#{b["id"]}-scope .margin-scope}}')
-        body.append(f':::: {{#{b["id"]} .'+classes.replace(' ', ' .')+' '+attributes+'}\n\n'+md+'\n\n'+source_link+'\n\n::::')
-        if b['type']=='text': body.append(':::')
+        if equation_image:attributes+=' data-equation-image="'+html.escape(equation_image,quote=True)+'"'
+        if bad_equation and equation_image:
+            attributes+=' data-equation-fallback="true"'
+            b['corrections'].append({'rule':'invalid extracted TeX; original equation image shown','accepted':True})
+        suspect=b['type'] in VISUAL and any(c.get('type','').endswith('caption') and len(text_content(c))>200 and not re.match(r'\s*(?:Fig(?:ure)?\.?|Table|図|表)\s*\d',text_content(c),re.I) for c in original.get('content',[]))
+        if suspect:b['corrections'].append({'rule':'ambiguous long caption retained in main column','accepted':True})
+        if not suspect and (b['type'] in VISUAL or b['type']=='page_footnote'):
+            classes.append('margin-item')
+            targets=b.get('scope_ids',[])
+            if targets:attributes+=' margin-for="'+' '.join(t+'-scope' for t in targets)+'"'
+        if b['type']=='text':body.append(':::::: {#'+b['id']+'-scope .margin-scope}')
+        body.append('::::: {#'+b['id']+' .'+ ' .'.join(classes)+' '+attributes+'}\n\n'+md+'\n\n'+source_link+'\n\n:::::')
+        if b['type']=='text':body.append('::::::')
+    if refs.entries:body.append('## References {#references}\n\n::: {#refs}\n:::')
+    doc['reading_blocks']=blocks
     (folder/'document.json').write_text(json.dumps(doc, ensure_ascii=False, indent=2))
     # Small source metadata only; not original text or library paths.
-    (site/'sources.js').write_text('window.FluentSources = '+json.dumps({b['id']:{'page':b['page'],'bbox':b['bbox']} for b in blocks}))
+    (site/'sources.js').write_text('window.FluentSources = '+json.dumps({b['id']:{'page':b['page'],'bbox':b['bbox']} for b in doc['blocks']}))
     source_images=site/'pages';source_images.mkdir(exist_ok=True)
     import pypdfium2 as pdf
     pdfdoc=pdf.PdfDocument(folder/'source.pdf')
@@ -131,6 +140,7 @@ format:
     toc: true
     toc-title: Contents
     toc-location: left
+    toc-depth: 4
     theme: cosmo
     css: reader.css
     include-after-body: reader.html
@@ -138,6 +148,12 @@ format:
       method: mathjax
       url: vendor/mathjax/tex-chtml.js
     link-external-newwindow: true
+    citations-hover: true
+bibliography: references.json
+csl: paper.csl
+link-citations: true
+nocite: |
+  @*
 execute:
   enabled: false
 ''')
@@ -149,8 +165,42 @@ execute:
     for name in ['reader.css','reader.html']: shutil.copyfile(ASSETS/name,site/name)
     with (folder/'build.log').open('w') as log:
         subprocess.run(['quarto','render','index.qmd'],cwd=site,stdout=log,stderr=subprocess.STDOUT,check=True)
+    # Equation fallback images are referenced by data attributes, which Quarto's
+    # resource scanner does not discover. Keep them available offline too.
+    if (site/'images').exists():shutil.copytree(site/'images',site/'_site/images',dirs_exist_ok=True)
     output=site/'_site/index.html'
     markup=output.read_text()
     markup=re.sub(r'<script[^>]+src="https://cdnjs.cloudflare.com/polyfill/[^"]+"[^>]*></script>', '', markup)
-    output.write_text(markup)
+    from bs4 import BeautifulSoup
+    parsed=BeautifulSoup(markup,'html.parser')
+    # Native Quarto resolves anchors; restore source numbering after citeproc.
+    # Its current custom-label list support fails on multi-character labels.
+    for b in blocks:
+        key=b.get('xref')
+        if not key:continue
+        number=b.get('equation_label') or b['label'][1]
+        for link in parsed.select('a.quarto-xref'):
+            if link.get('href')=='#'+key:
+                label=link.select_one('.quarto-xref') or link
+                label.clear();label.append(number)
+        target=parsed.find(id=key)
+        if target and key.startswith('eq-'):
+            for node in list(target.find_all(string=True)):
+                if r'\tag{' in node:
+                    node.replace_with(re.sub(r'\\tag\s*\{[^{}]*\}',lambda _:r'\tag{'+number+'}',str(node)))
+        elif target:
+            caption=target.select_one('.quarto-float-caption')
+            if caption:
+                for node in caption.find_all(string=True):
+                    if re.search(r'(Figure|Table)\s*\d+',str(node)):
+                        node.replace_with(re.sub(r'((?:Figure|Table)\s*)\d+',lambda m:m[1]+number,str(node),count=1));break
+    for block in parsed.select('[data-equation-fallback="true"]'):
+        math=block.select_one('.math')
+        if math:
+            image=parsed.new_tag('img',src=block['data-equation-image'],alt='Original equation')
+            math.replace_with(image)
+    output.write_text(str(parsed))
+    published=folder/'site'
+    if published.exists():shutil.rmtree(published)
+    site.rename(published)
     return title

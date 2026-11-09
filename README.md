@@ -15,13 +15,13 @@ uv run fluent-paper serve
 
 Open **http://127.0.0.1:8790**. Upload a PDF; the server starts a background worker automatically. The first MinerU conversion downloads its models. Later parsing and reading run locally. Close the server with Ctrl-C. Interrupted jobs resume on the next worker start.
 
-For optional local whitespace correction, install and start [Ollama](https://ollama.com/), run `./setup.sh --with-llm`, then:
+For local structural repair, install and start [Ollama](https://ollama.com/) and run `./setup.sh --with-llm`. The default model is `qwen3:4b` (about 2.5 GB). Set `FLUENT_PAPER_STRUCTURE_MODEL` to another Ollama model, or to an empty string for mechanical rules only.
 
-```sh
-FLUENT_PAPER_LLM=qwen3:4b uv run fluent-paper serve
-```
+The pipeline first restores numbered heading levels and joins clear page/column fragments. The local model decides uncertain heading levels, ambiguous paragraph joins (including printed hyphens), and the smallest figure scope within the reference paragraph and its immediate neighbors. It selects existing IDs and actions; it cannot rewrite scientific text. Decisions and input are cached in `structure-decisions.json`; the restored structure is in `reading-structure.json`. If Ollama is unavailable, conservative mechanical results remain usable and errors are recorded.
 
-The default preserves MinerU text. LLM proposals cannot alter non-whitespace characters; rejected edits are recorded. This conservative mode deliberately does not repair equations, numbers, missing words, or uncertain captions by guessing. It can be omitted entirely.
+Figures are inserted between restored paragraphs. Figure/equation references use native Quarto cross-reference syntax, and citations use citeproc with a reconstructed bibliography. Every linked citation can appear in the right margin. Original reference numbers are restored after Quarto rendering because its custom-label support does not reliably handle nonconsecutive labels.
+
+The older `correct` command is an optional whitespace-only correction pass. It does not repair equations or missing words.
 
 ## Ingestion
 
@@ -46,7 +46,7 @@ curl http://127.0.0.1:8790/api/papers
 curl -X POST http://127.0.0.1:8790/api/papers/PAPER_ID/retry
 ```
 
-Uploads are limited to 100 MiB. The server binds only to loopback and rejects cross-origin writes.
+Uploads are limited to 100 MiB. The server binds to loopback by default and rejects cross-origin writes. To preview from another device, run `uv run fluent-paper serve --host 0.0.0.0 --allowed-host YOUR_HOST_OR_IP`. This serves your private library to devices that can reach the port; no library contents are uploaded to GitHub.
 
 ## Reading and provenance
 
@@ -67,7 +67,7 @@ The live sample is at **https://fujiy.github.io/fluent-paper/**. GitHub Pages de
 
 ## Validation and limits
 
-See [VALIDATION.md](VALIDATION.md). This is a working prototype, not a guarantee of faithful OCR: particularly old scans, multi-column reading order, dense equations and caption associations need source checks. LLM correction is intentionally narrow. The private evaluation report and PDFs are never included in the repository or public demo.
+See [VALIDATION.md](VALIDATION.md). This is a working prototype, not a guarantee of faithful OCR: particularly old scans, multi-column reading order, dense equations and caption associations need source checks. Model decisions are constrained to structure; uncertain OCR still needs source checks. The private evaluation report and PDFs are never included in the repository or public demo.
 
 ```sh
 uv run python -m unittest discover -s tests

@@ -1,0 +1,11 @@
+const assert=require('node:assert/strict'),fs=require('node:fs');
+const {JSDOM}=require(process.env.JSDOM_MODULE||'jsdom');
+const dom=new JSDOM('<main><p><span class="citation"><a href="#ref-a" role="doc-biblioref">A</a></span></p><p>Other text</p><p><span class="citation"><a href="#ref-a" role="doc-biblioref">A again</a></span></p><div id="ref-a" class="csl-entry">Reference A</div></main>',{runScripts:'outside-only',url:'http://localhost/'});
+const w=dom.window;w.ResizeObserver=class {observe(){}unobserve(){}disconnect(){}};
+w.requestAnimationFrame=()=>1;w.cancelAnimationFrame=()=>{};
+w.eval(fs.readFileSync('src/fluent_paper/margin-layout/margin-layout.js','utf8'));
+w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
+const layout=w.mechanicsMarginLayout;layout.scan();
+const reference=w.document.getElementById('ref-a'),entry=layout.entries.get(reference);
+assert.equal(entry.targets.length,2);assert.equal(entry.targets[0].node.textContent,'A');assert.equal(entry.targets[1].node.textContent,'A again');assert(entry.targets.every(t=>t.point));assert.equal(w.document.querySelectorAll('#ref-a').length,1);
+layout.destroy();w.close();console.log('Repeated citations: 5 assertions passed');
