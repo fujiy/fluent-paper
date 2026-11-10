@@ -16,6 +16,7 @@ def database():
     db = sqlite3.connect(ROOT / 'library.sqlite', timeout=30)
     db.row_factory = sqlite3.Row
     db.execute('CREATE TABLE IF NOT EXISTS papers (id TEXT PRIMARY KEY, title TEXT, status TEXT, error TEXT)')
+    db.execute('CREATE TABLE IF NOT EXISTS translation_jobs (id TEXT PRIMARY KEY, status TEXT, error TEXT)')
     return db
 
 def add(path):
@@ -74,6 +75,20 @@ def build(key, title):
     from .reader import build_reader
     return build_reader(folder, title)
 
+def process_translation(key):
+    with database() as db:
+        claimed=db.execute("UPDATE translation_jobs SET status='processing',error=NULL WHERE id=? AND status='queued'",(key,)).rowcount
+    if not claimed:return
+    try:
+        from .translation import translate_paper
+        translate_paper(ROOT/key)
+        with database() as db:row=db.execute('SELECT title FROM papers WHERE id=?',(key,)).fetchone()
+        build(key,row['title'])
+        status,error='ready',None
+    except Exception as exc:status,error='failed',str(exc)
+    with database() as db:db.execute('UPDATE translation_jobs SET status=?,error=? WHERE id=?',(status,error,key))
+
+
 def worker(once=False, inbox=None):
     import fcntl
     database().close()
@@ -84,6 +99,7 @@ def worker(once=False, inbox=None):
         # Owning the exclusive lock proves no cooperating worker is active.
         with database() as db:
             db.execute("UPDATE papers SET status='queued' WHERE status='processing'")
+            db.execute("UPDATE translation_jobs SET status='queued' WHERE status='processing'")
         while True:
             if inbox:
                 for file in Path(inbox).glob('*'):
@@ -93,6 +109,8 @@ def worker(once=False, inbox=None):
             with database() as db:
                 rows = db.execute("SELECT id FROM papers WHERE status='queued'").fetchall()
             for row in rows: process(row['id'])
+            with database() as db:translations=db.execute("SELECT id FROM translation_jobs WHERE status='queued'").fetchall()
+            for row in translations:process_translation(row['id'])
             if once: return
             time.sleep(3)
 
@@ -103,6 +121,7 @@ def main():
     work = sub.add_parser('work'); work.add_argument('--once', action='store_true'); work.add_argument('--inbox')
     sub.add_parser('list')
     rebuild = sub.add_parser('rebuild'); rebuild.add_argument('id', nargs='?', default='all')
+    translate = sub.add_parser('translate'); translate.add_argument('id',nargs='?',default='all')
     correct = sub.add_parser('correct'); correct.add_argument('id'); correct.add_argument('--model', default='qwen3:4b')
     retry = sub.add_parser('retry'); retry.add_argument('id')
     serve = sub.add_parser('serve'); serve.add_argument('--port', type=int, default=8790); serve.add_argument('--host', default='127.0.0.1'); serve.add_argument('--allowed-host', action='append', default=[])
@@ -110,6 +129,12 @@ def main():
     if args.command == 'add':
         for pdf in args.pdf: print(add(pdf))
     elif args.command == 'work': worker(args.once, args.inbox)
+    elif args.command == 'translate':
+        from .translation import translate_paper
+        with database() as db:
+            rows=db.execute("SELECT id,title FROM papers WHERE status='ready'").fetchall() if args.id=='all' else db.execute("SELECT id,title FROM papers WHERE id=? AND status='ready'",(args.id,)).fetchall()
+        for row in rows:
+            translate_paper(ROOT/row['id']);build(row['id'],row['title'])
     elif args.command == 'correct':
         from .correction import correct
         correct(ROOT / args.id, args.model)

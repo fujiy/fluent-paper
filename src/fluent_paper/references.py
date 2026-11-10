@@ -75,13 +75,18 @@ class References:
             converted=numeric(match) if match else ''
             return converted if converted.startswith('[@') else m[0]
         markdown=re.sub(r'\$\s*\^\s*\{([\d\s,()–~～\\sim-]+)\}\s*\$',superscript,markdown)
+        markdown=re.sub(r'(\*{1,2})((?:Figures?|Figs?|Tables?)\.?)\1',r'\2',markdown,flags=re.I)
+        markdown=re.sub(r'((?:Figures?|Figs?|Tables?)\.?\s+)\$(\d+[a-z]?)\$',r'\1\2',markdown,flags=re.I)
         protected=[]
         def hide(m):protected.append(m[0]);return f'PROTECTEDMATH{len(protected)-1}END'
         value=re.sub(r'\$\$[\s\S]*?\$\$|(?<!\\)\$[^\n$]+(?<!\\)\$',hide,markdown)
-        for names,mapping in [(r'Figs?(?:ures?)?\.?',self.figures),(r'Tables?',self.tables)]:
+        for names,mapping in [(r'(?:Figures?|Figs?)\.?',self.figures),(r'Tables?',self.tables)]:
             pattern=re.compile(r'\b('+names+r')\s+('+NUMBER+r'(?:\s*(?:,|and|–|-)\s*'+NUMBER+r')*)',re.I)
             def group(m):
-                return m[1]+' '+re.sub(NUMBER,lambda n:'[-@'+mapping[n[0]]+']' if n[0] in mapping else n[0],m[2])
+                def number(n):
+                    key=n[0] if n[0] in mapping else re.sub(r'[a-z]$','',n[0])
+                    return '[-@'+mapping[key]+']'+n[0][len(key):] if key in mapping else n[0]
+                return m[1]+' '+re.sub(NUMBER,number,m[2])
             value=pattern.sub(group,value)
         value=re.sub(r'第\s*(\d+)\s*([図表])',lambda m:'第[-@'+(self.tables if m[2]=='表' else self.figures)[m[1]]+']'+m[2] if m[1] in (self.tables if m[2]=='表' else self.figures) else m[0],value)
         # Bare parenthesized equation numbers also occur after "from", "using", etc.

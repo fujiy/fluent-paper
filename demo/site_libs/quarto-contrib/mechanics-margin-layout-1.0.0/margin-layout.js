@@ -197,7 +197,7 @@
           }
           return found[0];
         };
-        entry.targets = markers ? markers.map(node => ({ node, point: true })) : [
+        entry.targets = markers ? markers.map(node => ({ node: node.closest('.prose-block') || node.closest('p') || node, point: false })) : [
           ...ids(el.getAttribute('data-margin-for') || el.getAttribute('margin-for')).map(id => ({ node: resolve(id, 'margin-scope'), point: false })),
           ...ids(el.getAttribute('data-margin-at') || el.getAttribute('margin-at')).map(id => ({ node: resolve(id, 'margin-anchor'), point: true })),
         ];
@@ -249,7 +249,7 @@
       const container = document.getElementById('quarto-content')?.getBoundingClientRect();
       const available = (container?.right || innerWidth - 24) - content.left;
       const rightTOC = document.querySelector('#quarto-margin-sidebar #TOC');
-      const competingNavigation = rightTOC && document.querySelector('#quarto-sidebar, #report-chapter-sidebar');
+      const competingNavigation = !document.body.classList.contains('reader-comparing') && rightTOC && document.querySelector('#quarto-sidebar, #report-chapter-sidebar');
       const rightMargin = getComputedStyle(this.main).getPropertyValue('--report-right-margin').trim();
       const wide = !this.printing && !competingNavigation &&
         (rightMargin ? rightMargin === '1' : innerWidth >= 1100 && available >= 760);
@@ -271,7 +271,7 @@
         this.status(entry);
         if (!wide || !entry.valid) { this.restore(entry); continue; }
         entry.el.classList.add('margin-layout-managed');
-        Object.assign(entry.el.style, { left: `${this.left}px`, width: `${this.width - 16}px`, maxHeight: `${this.height}px` });
+        Object.assign(entry.el.style, { left: `${this.left}px`, width: `${this.width}px`, maxHeight: `${this.height}px` });
       }
       // Batched after width/style changes. No reads in the scroll path.
       const scroll = window.scrollY;

@@ -41,6 +41,13 @@ def render_block(raw, block):
     return safe_markdown(ParseResult.from_dict(data).markdown())
 
 def build_reader(folder, fallback_title):
+    import fcntl
+    with (folder/'build.lock').open('a') as lock:
+        fcntl.flock(lock,fcntl.LOCK_EX)
+        return _build_reader(folder,fallback_title)
+
+
+def _build_reader(folder, fallback_title):
     from .provenance import normalize
     source = folder / 'parsed/middle_json.json'
     raw = json.loads(source.read_text())
@@ -62,11 +69,21 @@ def build_reader(folder, fallback_title):
     structure=restore(doc,folder,os.environ.get('FLUENT_PAPER_STRUCTURE_MODEL','qwen3:4b'))
     blocks=structure['blocks']
     refs=References(blocks);refs.write(site)
+    from .frontmatter import extract
+    front=extract(blocks,folder,os.environ.get('FLUENT_PAPER_STRUCTURE_MODEL','qwen3:4b'))
+    hidden=set(front['hidden_ids']);inputs=[];abstract=[]
+    inputs.append({'id':'paper-title','markdown':title,'kind':'title','sources':[]})
+    for b in blocks:
+        if b['id'] in front['abstract_ids']:
+            md=render_block(raw,b['original']).strip()
+            md=re.sub(r'^\s*(?:\*{1,2})?(?:Abstract|概要|要旨)[.．:：\s]*(?:\*{1,2})?\s*','',md,flags=re.I)
+            md=refs.convert(md);abstract.append(md)
+            inputs.append({'id':'abstract-'+b['id'],'markdown':md,'kind':'abstract','sources':b['sources']})
     validation=json.loads((folder/'math-validation.json').read_text()) if (folder/'math-validation.json').exists() else {'errors':[]}
     math_errors={(e['page'],e.get('index')) for e in validation['errors']}
     body=[]
     for b in blocks:
-        if b['type']=='ref_text':continue
+        if b['type']=='ref_text' or b['id'] in hidden:continue
         original=deepcopy(b['original'])
         if b['id'] in changes and len(b['sources'])==1:
             original['content']=changes[b['id']]['after']
@@ -74,6 +91,7 @@ def build_reader(folder, fallback_title):
             if re.match(r'^(References|Bibliography|参考文献)\s*$',text_content(original),re.I):continue
             heading=deepcopy(original);heading['type']='text';heading.pop('level',None)
             value=render_block(raw,heading).strip().replace('\n',' ')
+            inputs.append({'id':'sec-'+b['id'],'markdown':value,'kind':'heading','sources':b['sources']})
             body.append('#'*b['level']+' '+value+' {#sec-'+b['id']+'}')
             continue
         equation_image=original.get('image_path') if b['type']=='equation' else None
@@ -95,7 +113,10 @@ def build_reader(folder, fallback_title):
             md='::: {#'+b['xref']+'}\n\n'+'\n\n'.join(content_parts)+'\n\n'+refs.convert(caption)+'\n\n:::'
         else:md=render_block(raw,original).strip()
         if not md:continue
-        if b['type']=='text':md=refs.convert(md)
+        if b['type']=='text':
+            md=refs.convert(md)
+            inputs.append({'id':b['id'],'markdown':md,'kind':'paragraph','sources':b['sources']})
+        elif b['type']=='equation':inputs.append({'id':b['id'],'markdown':md,'kind':'equation','sources':b['sources']})
         sources=b['sources']
         source_link=' '.join(f'<button class="source-button" data-block="{q["id"]}" aria-label="View source, page {q["page"]}">p. {q["page"]}</button>' for q in sources)
         classes=['paper-block']
@@ -121,9 +142,12 @@ def build_reader(folder, fallback_title):
     (site/'sources.js').write_text('window.FluentSources = '+json.dumps({b['id']:{'page':b['page'],'bbox':b['bbox']} for b in doc['blocks']}))
     source_images=site/'pages';source_images.mkdir(exist_ok=True)
     import pypdfium2 as pdf
-    pdfdoc=pdf.PdfDocument(folder/'source.pdf')
+    pdfdoc=pdf.PdfDocument(folder/'source.pdf');page_sizes=[]
     for index in range(len(pdfdoc)):
+        page_sizes.append(list(pdfdoc[index].get_size()))
         dest=source_images/f'{index+1}.jpg'
+        previous=folder/'site/pages'/dest.name
+        if previous.exists():shutil.copyfile(previous,dest)
         if not dest.exists(): pdfdoc[index].render(scale=1.5).to_pil().save(dest,quality=82)
     pdfdoc.close()
     (site/'_quarto.yml').write_text('''project:
@@ -131,6 +155,9 @@ def build_reader(folder, fallback_title):
   resources:
     - source.pdf
     - sources.js
+    - comparison-data.js
+    - comparison.js
+    - plamo-license.html
     - pages/
     - vendor/
 filters:
@@ -148,7 +175,7 @@ format:
       method: mathjax
       url: vendor/mathjax/tex-chtml.js
     link-external-newwindow: true
-    citations-hover: true
+    citations-hover: false
 bibliography: references.json
 csl: paper.csl
 link-citations: true
@@ -161,7 +188,15 @@ execute:
     notice=''
     if attribution:
         notice=f'\n<div class="attribution">{html.escape(attribution["citation"])} · <a href="{html.escape(attribution["source"],quote=True)}">Publisher</a> · <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Reconstructed from PDF; layout and extraction corrections differ from the original.</div>\n'
-    (site/'index.qmd').write_text('---\ntitle: '+json.dumps(title)+'\nlang: en\n---\n\n<div class="reader-tools"><a href="source.pdf">Original PDF</a><button id="toggle-sources">Source links</button><button id="show-figures">Figures</button></div>\n'+notice+'\n\n'+'\n\n'.join(body))
+    metadata={'title':title,'lang':'en','author':front['authors']}
+    if abstract:metadata['abstract']='\n\n'.join(abstract)
+    (folder/'translation-input.json').write_text(json.dumps(inputs,ensure_ascii=False,indent=2))
+    (folder/'frontmatter.json').write_text(json.dumps(front,ensure_ascii=False,indent=2))
+    tools_html='<div class="reader-tools"><a href="source.pdf">Original PDF</a><label>Compare <select id="compare-mode"><option value="none">Off</option><option value="pdf">Original PDF</option><option value="ja">Japanese</option></select></label><button id="toggle-sources">Source links</button><button id="show-figures">Figures</button></div>'
+    (site/'index.qmd').write_text('---\n'+json.dumps(metadata,ensure_ascii=False)+'\n---\n\n'+tools_html+'\n'+notice+'\n\n'+'\n\n'.join(body))
+    (site/'comparison-data.js').write_text('window.FluentComparison = {};')
+    shutil.copyfile(ASSETS/'comparison.js',site/'comparison.js')
+    shutil.copyfile(ASSETS/'plamo-license.html',site/'plamo-license.html')
     for name in ['reader.css','reader.html']: shutil.copyfile(ASSETS/name,site/name)
     with (folder/'build.log').open('w') as log:
         subprocess.run(['quarto','render','index.qmd'],cwd=site,stdout=log,stderr=subprocess.STDOUT,check=True)
@@ -194,11 +229,40 @@ execute:
                 for node in caption.find_all(string=True):
                     if re.search(r'(Figure|Table)\s*\d+',str(node)):
                         node.replace_with(re.sub(r'((?:Figure|Table)\s*)\d+',lambda m:m[1]+number,str(node),count=1));break
+    # Make figure/table caption labels navigable too, not just body mentions.
+    for b in blocks:
+        key=b.get('xref','')
+        if not key.startswith(('fig-','tbl-')):continue
+        target=parsed.find(id=key)
+        caption=target.select_one('.quarto-float-caption') if target else None
+        if caption:
+            for node in list(caption.find_all(string=True)):
+                match=re.search(r'(?:Figure|Table)\s*\d+[a-z]?[.:]?',str(node))
+                if match and node.parent.name!='a':
+                    link=parsed.new_tag('a',href='#'+key);link['class']='caption-reference';link.string=match[0]
+                    node.replace_with(str(node)[:match.start()],link,str(node)[match.end():]);break
     for block in parsed.select('[data-equation-fallback="true"]'):
         math=block.select_one('.math')
         if math:
             image=parsed.new_tag('img',src=block['data-equation-image'],alt='Original equation')
             math.replace_with(image)
+    title_node=parsed.select_one('h1.title')
+    if title_node:title_node['id']='paper-title'
+    abstract_node=parsed.select_one('.abstract')
+    if abstract_node and not abstract_node.find('p'):
+        paragraph=parsed.new_tag('p')
+        for child in list(abstract_node.contents):
+            if getattr(child,'attrs',{}).get('class')==['block-title']:continue
+            paragraph.append(child.extract())
+        abstract_node.append(paragraph)
+    for node,key in zip(parsed.select('.abstract p'),front['abstract_ids']):
+        node['id']='abstract-'+key
+        start=parsed.new_tag('div',id=key+'-scope');start['class']='margin-scope';start['data-margin-end']=key+'-abstract-end'
+        end=parsed.new_tag('div',id=key+'-abstract-end');end['class']='margin-scope-end'
+        node.insert_before(start);node.insert_after(end)
+    from .comparison import build_data
+    comparison=build_data(parsed,inputs,folder,page_sizes,refs)
+    (site/'_site/comparison-data.js').write_text('window.FluentComparison = '+json.dumps(comparison,ensure_ascii=False).replace('</',r'<\/'))
     output.write_text(str(parsed))
     published=folder/'site'
     if published.exists():shutil.rmtree(published)

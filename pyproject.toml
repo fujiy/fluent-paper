@@ -9,3 +9,8 @@ requires-python = ">=3.12"
 dependencies = ["mineru==4.1.7", "fastapi", "uvicorn", "python-multipart"]
 [project.scripts]
 fluent-paper = "fluent_paper.cli:main"
+
+[project.optional-dependencies]
+translation = [
+    "plamo-translate==1.2.0",
+]

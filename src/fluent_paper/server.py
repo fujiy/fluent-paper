@@ -78,3 +78,36 @@ def asset(key:str,asset:str):
     base=(cli.ROOT/key/'site/_site').resolve();path=(base/asset).resolve()
     if not path.is_relative_to(base) or not path.is_file() or any(p.startswith('.') for p in Path(asset).parts):raise HTTPException(404)
     return FileResponse(path)
+
+
+@app.post('/api/papers/{key}/translation',status_code=202)
+def queue_translation(key:str):
+    import importlib.util
+    if importlib.util.find_spec('plamo_translate') is None:raise HTTPException(503,'Run setup.sh --with-translation first')
+    with cli.database() as db:
+        row=db.execute("SELECT status FROM papers WHERE id=?",(key,)).fetchone()
+        if not row or row['status']!='ready':raise HTTPException(409,'The paper must be ready first')
+        db.execute("INSERT INTO translation_jobs VALUES (?,'queued',NULL) ON CONFLICT(id) DO UPDATE SET status='queued',error=NULL WHERE status NOT IN ('queued','processing')",(key,))
+    return {'status':'queued'}
+
+@app.get('/api/papers/{key}/translation')
+def translation_status(key:str):
+    import json
+    with cli.database() as db:
+        paper=db.execute('SELECT id FROM papers WHERE id=?',(key,)).fetchone()
+        job=db.execute('SELECT status,error FROM translation_jobs WHERE id=?',(key,)).fetchone()
+    if paper is None:raise HTTPException(404)
+    result=dict(job) if job else {'status':'missing'}
+    path=cli.ROOT/key/'translation-ja.json'
+    if path.exists():
+        saved=json.loads(path.read_text())
+        result.update(completed=saved.get('completed',0),total=saved.get('total',0))
+        if not job:result.update(status=saved.get('status','missing'),error=saved.get('error'))
+        inputs=cli.ROOT/key/'translation-input.json'
+        if inputs.exists() and result['status'] not in ('queued','processing'):
+            from .translation import fingerprint
+            rows=[r for r in json.loads(inputs.read_text()) if r['kind']!='equation']
+            ready=sum(fingerprint(r['markdown']) in saved.get('entries',{}) for r in rows)
+            result.update(completed=ready,total=len(rows))
+            if ready<len(rows) and result['status']=='ready':result['status']='stale'
+    return result

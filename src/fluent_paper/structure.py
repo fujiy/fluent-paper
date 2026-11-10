@@ -30,7 +30,11 @@ class Decisions:
         key=hashlib.sha256(json.dumps([VERSION,self.model,kind,prompt,payload],sort_keys=True).encode()).hexdigest()
         if key in self.records and self.records[key].get('status')=='ok':return self.records[key]['answer']
         if not self.model:return {}
-        if kind=='figure-scope':
+        if kind=='frontmatter':
+            schema={'type':'object','properties':{
+                'authors':{'type':'array','items':{'type':'object','properties':{'name':{'type':'string'},'source_id':{'type':'string'}},'required':['name','source_id'],'additionalProperties':False}},
+                'abstract_ids':{'type':'array','items':{'type':'string'}}},'required':['authors','abstract_ids'],'additionalProperties':False}
+        elif kind=='figure-scope':
             schema={'type':'object','properties':{'paragraph_ids':{'type':'array','items':{'type':'string','enum':[p['id'] for p in payload['candidates']]},'maxItems':3},'reason':{'type':'string'}},'required':['paragraph_ids','reason'],'additionalProperties':False}
         elif kind=='paragraphs':
             schema={'type':'object','properties':{'joins':{'type':'array','items':{'type':'object','properties':{'left':{'type':'string'},'right':{'type':'string'},'mode':{'type':'string','enum':['space','dehyphenate','keep-hyphen','cjk','separate']}},'required':['left','right','mode'],'additionalProperties':False}}},'required':['joins'],'additionalProperties':False}
@@ -151,7 +155,7 @@ def restore(doc,folder,model='qwen3:4b'):
         label=figure_label(figure);figure['label']=label
         figure['after']=resolve(figure['after']);seeds=[]
         if label:
-            prefix=r'(?:Figs?(?:ures?)?\.?|図)' if label[0]=='fig' else r'(?:Tables?|表)'
+            prefix=r'(?:(?:Figures?|Figs?)\.?|図)' if label[0]=='fig' else r'(?:Tables?|表)'
             pattern=re.compile(prefix+r'\s*(\d+[a-z]?(?:\s*(?:,|and|–|-)\s*\d+[a-z]?)*)',re.I)
             def mentions(p):
                 value=text(p['original'])

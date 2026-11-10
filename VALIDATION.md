@@ -16,14 +16,23 @@ Environment: Apple M2 Ultra, 192 GB RAM; MinerU 4.1.7; Quarto; Ollama Qwen3 4B. 
 
 ## Automated checks
 
-- 21 Python tests, including hierarchy, layout-boundary joins, conservative figure scopes, Japanese and grouped figure labels, citation conversion, and: deduplication, invalid input rejection, upload API, cross-origin and host checks, traversal, ZIP extraction boundary, preservation of TeX characters, rejection of model changes to numbers/negation, and executable-cell removal.
+- 27 Python tests, including hierarchy, layout-boundary joins, conservative figure scopes, Japanese and grouped figure labels, citation conversion, and: deduplication, invalid input rejection, upload API, cross-origin and host checks, traversal, ZIP extraction boundary, preservation of TeX characters, rejection of model changes to numbers/negation, and executable-cell removal.
 - 14 DOM assertions: source links, original page image, bounding-box highlight, close action, enlarged figure, gallery, scrolling TOC highlight and repeated citation targets. These use jsdom, not a browser.
 - Public sample's HTML image/script/style references resolve locally; no external rendering dependency remains. MathJax, fonts and source-page images are bundled.
-- Final corpus checks passed for 12 readers: **78 paragraph joins, 331 linked citation occurrences, 668 figure/equation cross-reference links, and 397 visual objects with paragraph scopes**. No local LLM request errors were recorded. These are coverage counts, not semantic accuracy scores.
+- Final corpus checks passed for 12 readers: **78 paragraph joins, 331 linked citation occurrences, 672 figure/equation cross-reference links, and 397 visual objects with paragraph scopes**. No local LLM request errors were recorded. These are coverage counts, not semantic accuracy scores.
 - `scripts/check_readers.py` checks all 12 rebuilt readers for unique HTML IDs, valid fragment links, existing local image/script/style assets, complete original-source mappings, figures outside prose containers, and preserved equation numbers. Equation fallback images are copied explicitly because Quarto does not discover data-attribute asset references.
 - GitHub Pages and the Mac Pro sample mirror returned HTTP 200 for HTML, CSS, JavaScript and source-page images. The mirror was checked from the same Mac; separate-device viewing was not tested.
 - The private preview listens on `0.0.0.0:8790`; both the Mac Pro Tailscale hostname and IP returned HTTP 200 from this Mac. Separate-device access has not been tested.
 - Private data is excluded by location and a fixed publisher-sample export allowlist, not just `.gitignore`.
+
+## Comparison reader update
+
+- Reading text is 16 px, capped at 640 px. Geometry tests cover normal and comparison layouts at 800, 1100, 1440, 1800 and 2560 px: equal comparison/text widths and a figure width between 50% and 62.5% when the right column fits.
+- All 12 readers include original-page comparison data. 2,498 blocks have verified DOM/source alignment targets; native Quarto author and abstract metadata are reconstructed from verified extracted content.
+- PLaMo 3 Translate 2B, using the official pinned CLI's local MLX backend at 4-bit precision, completed 80 translation units for the public sample and 62 for a private seven-page Zotero paper. These 142 units include titles, headings, abstract and prose. Original math and citation markers are preserved; model output is not a certified translation. Both translations are cached privately; only the licensed sample's translation is exported.
+- Comparison DOM tests exercise equal-height paragraph alignment, reverse and forward PDF scroll mapping, reverse Japanese scroll mapping, and restoring original heights/navigation after closing comparison. The live private API queue was exercised with a cached paper and completed successfully.
+- Other papers can be translated on demand or using the batch CLI. The public sample is prebuilt and does not call a translation API.
+- The comparison reader includes the model license and labels machine translation as Built with PLaMo.
 
 ## Limits
 

@@ -23,6 +23,22 @@ Figures are inserted between restored paragraphs. Figure/equation references use
 
 The older `correct` command is an optional whitespace-only correction pass. It does not repair equations or missing words.
 
+
+The reader uses a 16 px reading font with a 640 px maximum text column. The right column is 50–62.5% of that width. **Compare → Original PDF** opens synchronized original page images on the left. **Compare → Japanese** aligns the translation to each paragraph; the navigation is hidden in both comparison modes. Scrolling either side follows the corresponding source position.
+
+To enable local Japanese translation with the official PLaMo 3 Translate 2B model:
+
+```sh
+./setup.sh --with-translation
+uv run --extra translation fluent-paper serve --host 0.0.0.0 --allowed-host YOUR_HOST_OR_IP
+# Batch translation (one paper, or use “all”):
+uv run --extra translation fluent-paper translate PAPER_ID
+```
+
+In a private reader, select **Japanese**, then **Translate**. The existing worker queues the job and updates the view when complete. Translation is cached per paragraph outside Git. The first use downloads the original model weights (about 5.76 GB); inference uses local MLX at 4-bit precision. Formulas and citation markers are preserved exactly. An interrupted job resumes from saved paragraphs; failures remain visible and can be retried. `FLUENT_PAPER_TRANSLATION_MODEL` can select another original PLaMo 3 checkpoint supported by the pinned backend.
+
+The public sample includes a prebuilt machine translation and works without a server. Built with PLaMo; translations are model output under the bundled [PLaMo Community License](src/fluent_paper/plamo-license.html). See the [official backend](https://github.com/pfnet/plamo-translate-cli) for supported models and license details.
+
 ## Ingestion
 
 ```sh

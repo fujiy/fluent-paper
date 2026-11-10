@@ -7,5 +7,5 @@ w.eval(fs.readFileSync('src/fluent_paper/margin-layout/margin-layout.js','utf8')
 w.document.dispatchEvent(new w.Event('DOMContentLoaded'));
 const layout=w.mechanicsMarginLayout;layout.scan();
 const reference=w.document.getElementById('ref-a'),entry=layout.entries.get(reference);
-assert.equal(entry.targets.length,2);assert.equal(entry.targets[0].node.textContent,'A');assert.equal(entry.targets[1].node.textContent,'A again');assert(entry.targets.every(t=>t.point));assert.equal(w.document.querySelectorAll('#ref-a').length,1);
+assert.equal(entry.targets.length,2);assert.equal(entry.targets[0].node.textContent,'A');assert.equal(entry.targets[1].node.textContent,'A again');assert(entry.targets.every(t=>!t.point));assert.equal(w.document.querySelectorAll('#ref-a').length,1);
 layout.destroy();w.close();console.log('Repeated citations: 5 assertions passed');

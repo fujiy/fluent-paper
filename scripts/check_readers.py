@@ -19,6 +19,8 @@ for row in rows:
     for e in soup.select('img[src],script[src],link[rel=stylesheet][href]'):
         path=e.get('src') or e.get('href');url=urlsplit(path)
         if not url.scheme and not url.netloc:assert (site/unquote(url.path)).is_file(), 'Missing local asset'
+    for item in soup.select('[data-margin-for],[margin-for]'):
+        for target in (item.get('data-margin-for') or item.get('margin-for')).split():assert target in ids,'Missing margin scope'
     sources=json.loads((site/'sources.js').read_text().split('=',1)[1])
     for button in soup.select('.source-button'):assert button['data-block'] in sources,'Missing original source'
     assert not soup.select('.prose-block .quarto-float'), 'Figure nested inside prose'
@@ -27,6 +29,13 @@ for row in rows:
             target=soup.find(id=block['xref'])
             assert target is not None, 'Missing equation target'
             if not target.find('img'):assert '\\tag{'+block['equation_label']+'}' in target.get_text(), 'Changed equation number'
+    comparison=site/'comparison-data.js'
+    if comparison.exists():
+        data=json.loads(comparison.read_text().split('=',1)[1])
+        assert all(soup.select_one('[data-compare-id="'+row['id']+'"]') for row in data['rows']), 'Missing comparison paragraph'
+        if data['translation_status']=='ready':assert all(row['translation_html'] for row in data['rows'] if row['kind']!='equation'),'Incomplete translation'
+        summary['comparison_rows']+=len(data['rows'])
+        summary['translated_rows']+=sum(bool(row['translation_html']) for row in data['rows'])
     summary['papers']+=1;summary['paragraph_joins']+=len(structure['aliases'])
     summary['citation_mentions']+=len(soup.select('.citation a[role=doc-biblioref]'))
     summary['cross_reference_links']+=len(soup.select('a.quarto-xref'))

@@ -17,3 +17,5 @@
  document.getElementById('show-figures').onclick=()=>{const d=dialog('Figures');const grid=document.createElement('div');grid.className='figure-grid';document.querySelectorAll('main .margin-item img').forEach(im=>{const a=document.createElement('a');a.href='#'+im.closest('.paper-block').id;const c=im.cloneNode();a.append(c);a.onclick=()=>d.close();grid.append(a)});d.append(grid)};
 })();
 </script>
+<script src="comparison-data.js"></script>
+<script src="comparison.js"></script>
