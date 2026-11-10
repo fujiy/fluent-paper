@@ -1,0 +1,32 @@
+src/fluent_paper/comparison.js
+  s_fcbfb2e2b45915::t_66dcc0887dadb2 162
+  s_fcbfb2e2b45915::t_50ad2a4bce19f8 31,44-46,151,163-175
+tests/comparison.test.cjs
+  s_fcbfb2e2b45915::t_66dcc0887dadb2 5,13,30
+demo/comparison.js
+  s_b7236ddc68938f::t_a0eab3df456853 31,44-46,151,162-175
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "57489e2676f7c197367d778eb7a654ed4fe6a0cf",
+  "prompts": {},
+  "sessions": {
+    "s_b7236ddc68938f": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c434-982e-7120-a1b9-9514f030d35b",
+        "model": "unknown"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    },
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
