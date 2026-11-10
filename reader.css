@@ -8,3 +8,34 @@ main h2{margin-top:2rem;margin-bottom:.65rem}main h3{margin-top:1.4rem;margin-bo
 #TOC a.reader-current{color:#1f536c!important;border-left:2px solid #1f536c;font-weight:600;background:#edf3f6}
 #TOC a:not(.reader-current){font-weight:400}
 .paper-block .quarto-figure{margin-block:.7rem}.csl-entry{margin-bottom:.65rem}
+/* A capped reading column and a proportional, explicitly measured figure column. */
+:root{--reader-body:640px;--reader-left:176px;--reader-figure:400px;--reader-left-gap:24px;--reader-right-gap:24px;--reader-total:1312px}
+main,main.content{font-size:16px;line-height:1.65}
+body.reader-layout #quarto-content,body.reader-layout #quarto-content main.content,body.reader-layout #quarto-content main .page-columns.page-full{
+ display:grid!important;max-width:none;padding-inline:0!important;
+ grid-template-columns:[screen-start] 24px [screen-start-inset page-start page-start-inset] var(--reader-left) [body-start-outset] var(--reader-left-gap) [body-start body-content-start] var(--reader-body) [body-content-end body-end] var(--reader-right-gap) [body-end-outset margin-start] var(--reader-figure) [margin-end page-end-inset page-end screen-end-inset] 24px [screen-end]!important;
+}
+body.reader-layout #quarto-content{width:var(--reader-total)!important;max-width:var(--reader-total)!important;margin-inline:auto;box-sizing:border-box}
+body.reader-layout #quarto-content>main.content{grid-column:screen-start/screen-end!important;grid-row:content-top/content-bottom;padding-inline:0;min-width:0;overflow:visible}
+body.reader-layout #quarto-content>main.content>*{grid-column:body-content-start/body-content-end;min-width:0}
+body.reader-layout #quarto-content>main.content>.margin-layout-right-probe{grid-column:margin-start/margin-end}
+body.reader-layout #quarto-margin-sidebar{grid-column:page-start/body-start-outset!important;grid-row:content-top/content-bottom}
+body.reader-comparing #quarto-margin-sidebar,body.reader-comparing #quarto-sidebar,body.reader-comparing #report-chapter-sidebar{display:none!important}
+.reader-tools{flex-wrap:wrap;gap:12px}.reader-tools select{font:inherit;background:white;border:1px solid #ddd;border-radius:3px;padding:3px 5px}
+/* No vertical scrollbar inside a displayed formula, including Quarto's outer wrapper. */
+.paper-block:has(>.math.display),.paper-block .math.display,.paper-block .math.display mjx-container,.comparison-row .math.display,.comparison-row mjx-container[display=true]{height:auto!important;max-height:none!important;overflow-y:hidden!important;min-height:min-content}
+.math.display{overflow-x:auto;padding-block:.4rem}.math.display mjx-container{margin:.4em 0!important}
+#comparison-panel{position:fixed;top:16px;bottom:16px;z-index:25;background:white;display:flex;flex-direction:column;font:16px/1.65 Georgia,'Times New Roman',serif;min-width:0}
+#comparison-panel[hidden]{display:none}
+.comparison-toolbar{display:flex;align-items:center;gap:10px;min-height:34px;padding-bottom:8px;border-bottom:1px solid #eee;font:12px system-ui}
+.comparison-toolbar #comparison-label{font-weight:600}.comparison-toolbar #comparison-status{flex:1;color:#657078;font-size:11px}
+.comparison-toolbar button{background:white;border:1px solid #ddd;border-radius:3px;padding:3px 6px;color:#4b5962;font:inherit}
+.comparison-scroll{overflow:auto;flex:1;min-height:0;overscroll-behavior:contain;scrollbar-width:thin;overflow-anchor:none}
+.comparison-track{position:relative}.pdf-page{position:relative;width:100%;margin-bottom:18px;background:#fafafa}.pdf-page img{width:100%;height:100%;display:block}.pdf-highlight{position:absolute;pointer-events:none;border:1px solid #cba55d;background:#ffcf5420}
+.comparison-row{position:absolute;left:0;right:0;box-sizing:border-box;overflow-wrap:break-word}.comparison-row p{margin:0;text-align:justify;text-indent:1.5em}.comparison-row.heading,.comparison-row.title{font-family:system-ui,sans-serif;font-weight:600}.comparison-row.heading{font-size:1.1rem}.comparison-row.title{font-size:1.6rem}.comparison-row.heading p,.comparison-row.title p{text-indent:0}.translation-pending{color:#9ba2a7;font:12px system-ui!important;text-indent:0!important}
+.translation-credit{font:10px system-ui;color:#777;padding-top:8px}.translation-credit[hidden]{display:none}.translation-credit a{color:inherit}
+@media(max-width:1099px){body.reader-layout:not(.reader-comparing) #quarto-margin-sidebar{display:none!important}main,main.content{font-size:16px}}
+@media print{#comparison-panel{display:none!important}body.reader-layout #quarto-content,body.reader-layout #quarto-content main.content{display:block!important;width:auto!important;max-width:100%!important}[data-compare-id]{min-height:0!important}}
+body.reader-layout #quarto-margin-sidebar{width:var(--reader-left);max-width:var(--reader-left)}
+.caption-reference{color:inherit;text-decoration:none}.caption-reference:hover{text-decoration:underline}
+main .abstract{font-size:16px;line-height:1.65}main .abstract p{margin:0 0 .35rem;text-align:justify;text-indent:1.5em}
