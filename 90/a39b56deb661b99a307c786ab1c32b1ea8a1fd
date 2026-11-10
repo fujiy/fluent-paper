@@ -1,0 +1,97 @@
+src/fluent_paper/reader.css
+  s_fcbfb2e2b45915::t_ae37a21b0ffb9e 11-38
+  s_fcbfb2e2b45915::t_ac518c2441df77 39-40
+  s_fcbfb2e2b45915::t_7d62e5ee1c219c 41
+src/fluent_paper/server.py
+  s_fcbfb2e2b45915::t_74bd25065b51bf 81-105,113
+  s_fcbfb2e2b45915::t_cf92bfaf7b25b0 106-112
+demo/comparison.js
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 1-162
+src/fluent_paper/frontmatter.py
+  s_fcbfb2e2b45915::t_73e3ca5ce7e1e6 1-51
+src/fluent_paper/references.py
+  s_fcbfb2e2b45915::t_df14836d55b239 78-79
+  s_fcbfb2e2b45915::t_addae915ebff1f 83,86-89
+src/fluent_paper/reader.py
+  s_fcbfb2e2b45915::t_ac518c2441df77 44-50
+  s_fcbfb2e2b45915::t_8409318414cd83 72-81,86,94,116-119,145,147,149-150,158-160,178,191-199,249-250,263-264
+  s_fcbfb2e2b45915::t_df14836d55b239 232-243
+  s_fcbfb2e2b45915::t_68f221628d4c81 258-262
+  s_fcbfb2e2b45915::t_40c94aec2cc452 251-257,265
+tests/citations.test.cjs
+  s_fcbfb2e2b45915::t_df14836d55b239 10
+src/fluent_paper/comparison.py
+  s_fcbfb2e2b45915::t_cf92bfaf7b25b0 54-57
+  s_fcbfb2e2b45915::t_1157c574b527aa 1-53
+src/fluent_paper/structure.py
+  s_fcbfb2e2b45915::t_addae915ebff1f 158
+  s_fcbfb2e2b45915::t_73e3ca5ce7e1e6 33-37
+src/fluent_paper/translation.py
+  s_fcbfb2e2b45915::t_ac518c2441df77 50-56,63-65
+  s_fcbfb2e2b45915::t_1157c574b527aa 1-49,57-62,66-97
+src/fluent_paper/plamo-license.html
+  s_fcbfb2e2b45915::t_ab2d2d0f57a35c 1-153
+demo/index.html
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 7-9,162,165-178,182,187,189,195,197,199,205,207,209,215,218-219,221-222,228,240,248,250-251,256,258,260,267,269,271,277,279,281,288,290,292,298,302-303,305,311,320,328,336,338,344,346,354,356,362,364,372,374,380,382,384,390,392,400,408,416,418,424,426,434,436,442,444,452,454,460,462,464,470,472,480,482,488,490,498,500,506,508,516,518,524,526,534,536,542,544,546,552,554,564-565,567,573,576-577,579,585,587,595,597,603,605,613,615,621,625-626,628,634,636,638,644,646,654,656,662,664,672,674,680,682,690,692,698,700,702,708,710,718,720,726,728,736,738,744,746,754,756,762,764,772,780,782,788,797,805,807,813,818-819,821,828,837,846-847,849,855,857,865,867,873,875,883,885,891,893,901,903,909,911,919,921,928,930,940-941,943,949,951,953,959,961,969,977,979,985,987,995,997,1003,1005,1013,1015,1023,1025,1027,1033,1035,1037,1044,1046,1054,1056,1062,1064,1072,1074,1080,1082,1093-1094,1096,1102,1111,1123,1135-1136,1138,1145,1154,1164-1165,1167,1173,1175,1177,1183,1185,1187,1193,1202,1217,1225,1227,1233,1242,1253-1254,1256,1262,1264,1266,1272,1274,1276,1282,1284,1286,1292,1294,1296,1302,1304,1306,1312,1314,1316,1322,1392-1393
+demo/reader.css
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 11-41
+tests/test_comparison.py
+  s_fcbfb2e2b45915::t_886f95d761f6b7 51-56
+  s_fcbfb2e2b45915::t_cf92bfaf7b25b0 33-50
+  s_fcbfb2e2b45915::t_ac518c2441df77 1-32
+src/fluent_paper/margin-layout/margin-layout.js
+  s_fcbfb2e2b45915::t_cf92bfaf7b25b0 252
+  s_fcbfb2e2b45915::t_addae915ebff1f 200,274
+VALIDATION.md
+  s_fcbfb2e2b45915::t_886f95d761f6b7 19,22,28-35
+  s_fcbfb2e2b45915::t_5c4e61de7dbde7 36
+src/fluent_paper/comparison.js
+  s_fcbfb2e2b45915::t_ae37a21b0ffb9e 1-60,65-77,79-101,103-139,141-142,145-155,157-162
+  s_fcbfb2e2b45915::t_08c2e93525e12e 61-64,78,102,140,144,156
+  s_fcbfb2e2b45915::t_b1d2502cfdfaad 143
+setup.sh
+  s_fcbfb2e2b45915::t_74bd25065b51bf 6-10
+src/fluent_paper/cli.py
+  s_fcbfb2e2b45915::t_74bd25065b51bf 19,78-91,102,112-113,124,132-137
+tests/reader.test.cjs
+  s_fcbfb2e2b45915::t_df14836d55b239 7
+src/fluent_paper/reader.html
+  s_fcbfb2e2b45915::t_ae37a21b0ffb9e 20-21
+demo/plamo-license.html
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 1-153
+scripts/check_readers.py
+  s_fcbfb2e2b45915::t_68f221628d4c81 22-23,32-38
+README.md
+  s_fcbfb2e2b45915::t_68f221628d4c81 26-41
+tests/comparison.test.cjs
+  s_fcbfb2e2b45915::t_b5e4003bf9ec22 1-13,15-23,25-31,33-34
+  s_fcbfb2e2b45915::t_660eefff04b859 14,24,32,35-36
+demo/ATTRIBUTION.txt
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 5
+demo/comparison-data.js
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 1
+scripts/export_demo.py
+  s_fcbfb2e2b45915::t_68f221628d4c81 22
+demo/site_libs/quarto-contrib/mechanics-margin-layout-1.0.0/margin-layout.js
+  s_fcbfb2e2b45915::t_2c27b0bc133ecc 200,252,274
+pyproject.toml
+  s_fcbfb2e2b45915::t_a8fa79b22adc5f 12-16
+uv.lock
+  s_fcbfb2e2b45915::t_b36f1255785e8b 86-94,661-665,670,674,923-931,1117-1143,1153-1166,1436-1466,1630-1688,1775-1791,2187-2202,2392-2406,2425-2438,2527-2535,2554-2572,2619-2632,2640,2642-2654,2656,2658-2670,2672,2674-2686,2688,2690-2702,2704,2706-2718,2720,2722-2734,2862-2969,2988,2990-3003,3015-3028,3130-3142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "90a39b56deb661b99a307c786ab1c32b1ea8a1fd",
+  "prompts": {},
+  "sessions": {
+    "s_fcbfb2e2b45915": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a1c12d-84ce-7db3-b375-4d98e5c05d19",
+        "model": "gpt-6-astra"
+      },
+      "human_author": "Yuki Fujihara <mail@fujiy.dev>"
+    }
+  }
+}
