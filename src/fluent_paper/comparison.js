@@ -28,6 +28,7 @@
  const scroll=panel.querySelector('.comparison-scroll'),track=panel.querySelector('.comparison-track');
  const status=panel.querySelector('#comparison-status'),translate=panel.querySelector('#translate-paper');
  const apiKey=location.pathname.match(/\/papers\/([a-f0-9]{24})\//)?.[1];
+ let alignFrame=0;
  let mode='none',frame=0,suppressPanel=0,suppressWindow=0,active=null,pollTimer;
  function layout(){
   const d=dimensions(innerWidth,mode!=='none');
@@ -39,6 +40,9 @@
   panel.style.left=((content?.getBoundingClientRect().left||0)+24)+'px';
   panel.style.width=d.left+'px';
   window.mechanicsMarginLayout?.invalidate();
+ }
+ function scheduleAlignment(){
+  if(mode==='ja'&&!alignFrame)alignFrame=requestAnimationFrame(()=>{alignFrame=0;align();});
  }
  function resetHeights(){for(const [node,height] of savedHeights)node.style.minHeight=height;}
  function align(){
@@ -144,7 +148,7 @@
     cell.innerHTML=row.translation_html||(row.kind==='equation'?row.html:'');
     track.append(cell);
    }
-   align();
+   align();scheduleAlignment();
    const math=window.MathJax;
    if(math?.typesetPromise)math.typesetPromise([track]).then(align);
    else math?.startup?.promise?.then(()=>math.typesetPromise([track]).then(align));
@@ -155,8 +159,20 @@
  select.addEventListener('change',()=>change(select.value));
  panel.querySelector('#close-comparison').onclick=()=>{change('none');select.focus();};
  window.addEventListener('scroll',schedule,{passive:true});
- window.addEventListener('resize',()=>{layout();if(mode==='ja')align();else schedule();});
- document.fonts?.ready.then(()=>{layout();align();});
+ window.addEventListener('resize',()=>{layout();if(mode==='ja')scheduleAlignment();else schedule();});
+ document.fonts?.ready.then(()=>{layout();scheduleAlignment();});
+ document.fonts?.addEventListener('loadingdone',scheduleAlignment);
+ window.addEventListener('load',()=>{
+  const settled=()=>{layout();scheduleAlignment();schedule();};
+  if(window.MathJax?.startup?.promise)window.MathJax.startup.promise.then(settled);else settled();
+ });
+ // Margin items leave normal flow after their first measurement; image/math
+ // completion can also move paragraphs. Reconcile after those layout changes.
+ if(window.ResizeObserver){
+  const resize=new ResizeObserver(()=>{scheduleAlignment();schedule();});
+  const main=document.querySelector('main');if(main)resize.observe(main);
+  window.addEventListener('pagehide',()=>resize.disconnect(),{once:true});
+ }
  const initial=new URL(location.href).searchParams.get('compare');change(['pdf','ja'].includes(initial)?initial:'none');
  window.FluentCompare.setMode=change;
 })();
